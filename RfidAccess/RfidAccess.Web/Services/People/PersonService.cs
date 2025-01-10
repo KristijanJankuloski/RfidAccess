@@ -1,6 +1,7 @@
 ﻿using RfidAccess.Web.DataAccess.Repositories.People;
 using RfidAccess.Web.Models;
 using RfidAccess.Web.Services.Buffer;
+using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.People;
 
 namespace RfidAccess.Web.Services.People
@@ -12,7 +13,7 @@ namespace RfidAccess.Web.Services.People
         private readonly PersonBufferService personBuffer = personBuffer;
         private readonly IPersonRepository personRepository = personRepository;
 
-        public void CreatePerson(PersonCreateViewModel viewModel)
+        public Result CreatePerson(PersonCreateViewModel viewModel)
         {
             Person person = new Person()
             {
@@ -22,6 +23,38 @@ namespace RfidAccess.Web.Services.People
             };
 
             personBuffer.People.Add(person);
+            return Result.Success;
+        }
+
+        public async Task<Result<PersonCombinedViewModel>> GetAllPeople()
+        {
+            List<Person> people = await personRepository.GetAll();
+
+            List<PersonViewModel> response = people.Select(x => new PersonViewModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                CreatedOn = x.CreatedOn,
+                Code = x.Code
+            }).ToList();
+
+            List<PersonViewModel> buffer = personBuffer.People.Select(x => new PersonViewModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                CreatedOn = x.CreatedOn,
+                Code = x.Code
+            }).ToList();
+
+            PersonCombinedViewModel combined = new PersonCombinedViewModel
+            {
+                Buffer = buffer,
+                People = response
+            };
+
+            return new Result<PersonCombinedViewModel>(combined);
         }
     }
 }

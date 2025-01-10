@@ -18,6 +18,12 @@ def press_button(relay_pin):
     time.sleep(0.5)
     GPIO.output(relay_pin, GPIO.LOW)
 
+def load_config():
+    config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+    with open(config_path, 'r') as config_file:
+        config = json.load(config_file)
+    return config['url']
+
 def main():
     try:
         while True:

@@ -3,6 +3,7 @@ using RfidAccess.Web.DataAccess.Context;
 using RfidAccess.Web.DataAccess.Repositories.People;
 using RfidAccess.Web.DataAccess.Repositories.Records;
 using RfidAccess.Web.Services.Buffer;
+using RfidAccess.Web.Services.People;
 using RfidAccess.Web.Services.Records;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddTransient<IPersonRepository, PersonRepository>();
 builder.Services.AddTransient<IRecordRepository, RecordRepository>();
 
 builder.Services.AddScoped<IRecordService, RecordService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 
 builder.Services.AddSingleton(new PersonBufferService());
 

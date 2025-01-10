@@ -1,9 +1,12 @@
-﻿using RfidAccess.Web.ViewModels.People;
+﻿using RfidAccess.Web.ViewModels.Base;
+using RfidAccess.Web.ViewModels.People;
 
 namespace RfidAccess.Web.Services.People
 {
     public interface IPersonService
     {
-        void CreatePerson(PersonCreateViewModel viewModel);
+        Result CreatePerson(PersonCreateViewModel viewModel);
+
+        Task<Result<PersonCombinedViewModel>> GetAllPeople();
     }
 }

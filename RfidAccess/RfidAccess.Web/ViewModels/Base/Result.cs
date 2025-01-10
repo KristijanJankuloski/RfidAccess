@@ -47,5 +47,15 @@
             IsSuccess = true;
             IsFailed = false;
         }
+
+        public static Result Failure<T>(string message)
+        {
+            return new Result<T>(message);
+        }
+
+        public static Result Success(T value)
+        {
+            return new Result<T>(value);
+        }
     }
 }

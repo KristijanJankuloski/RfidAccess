@@ -28,6 +28,7 @@ namespace RfidAccess.Web.Services.Records
                 personToInsert.Code = code;
                 personRepository.Create(personToInsert);
                 await personRepository.SaveChanges();
+                personBuffer.People.Remove(personToInsert);
                 return Result.Failure("PERSON_INSERTED");
             }
 

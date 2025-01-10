@@ -1,0 +1,27 @@
+﻿@model PersonCreateViewModel
+@{
+    ViewData["Title"] = "Нов корисник";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title display-3">Нов корисник</h2>
+    </div>
+    <div class="card-body">
+        <div class="container-lg">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="FirstName">Име</label>
+                    <input type="text" name="FirstName" id="FirstName" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label for="LastName">Презиме</label>
+                    <input type="text" name="LastName" id="LastName" class="form-control" />
+                </div>
+                <div>
+                    <button class="btn btn-primary" type="submit">Зачувај</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

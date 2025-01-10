@@ -1,0 +1,57 @@
+﻿@model PersonCombinedViewModel
+@{
+    ViewData["Title"] = "Корисници";
+}
+<div class="d-flex justify-content-between align-items-center">
+    <h1 class="display-5">Корисници</h1>
+    <a class="btn btn-success" asp-area="" asp-controller="People" asp-action="Create">Нов корисник</a>
+</div>
+@if (Model.Buffer.Count > 0)
+{
+    <table class="table mb-3">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Презиме</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.Buffer)
+            {
+                <tr class="bg-warning">
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if(Model.People.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Презиме</th>
+                <th>Шифра</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in Model.People)
+            {
+                <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Code</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+} else
+{
+    <div class="card">
+        <div class="card-header">
+            <h3 class="display-6">Нема внесени корисници</h3>
+        </div>
+    </div>
+}
