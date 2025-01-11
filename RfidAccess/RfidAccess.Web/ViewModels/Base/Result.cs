@@ -48,12 +48,12 @@
             IsFailed = false;
         }
 
-        public static Result Failure<T>(string message)
+        public static Result FailureGeneric<T>(string message)
         {
             return new Result<T>(message);
         }
 
-        public static Result Success(T value)
+        public static Result Ok(T value)
         {
             return new Result<T>(value);
         }

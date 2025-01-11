@@ -6,7 +6,7 @@ namespace RfidAccess.Web.DataAccess.Repositories.Base
 {
     public abstract class BaseRepository<T>(RfidContext context) : IRepository<T> where T : BaseEntity
     {
-        private readonly RfidContext context = context;
+        protected readonly RfidContext context = context;
 
         public async Task<int> Count()
         {

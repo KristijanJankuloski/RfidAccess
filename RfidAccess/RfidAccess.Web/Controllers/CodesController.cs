@@ -17,15 +17,20 @@ namespace RfidAccess.Web.Controllers
         {
             try
             {
+                if (Request.Host.Value != "localhost")
+                {
+                    return Unauthorized();
+                }
+
                 Result result = await recordService.InsertCode(request.Value);
                 if (result.IsFailed)
                 {
                     if (result.Message == "PERSON_INSERTED")
-                        return Created();
+                        return StatusCode(StatusCodes.Status201Created, "CREATED");
                     return BadRequest(result.Message);
                 }
 
-                return Ok("Allowed");
+                return Ok("ALLOWED");
             }
             catch (Exception ex)
             {

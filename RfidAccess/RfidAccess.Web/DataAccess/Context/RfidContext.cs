@@ -9,6 +9,8 @@
 
         public DbSet<Record> Records { get; set; }
 
+        public DbSet<WeekTimeSlots> WeekTimeSlots { get; set; }
+
         public RfidContext(DbContextOptions<RfidContext> options)
             : base(options)
         {
