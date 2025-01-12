@@ -17,10 +17,10 @@ namespace RfidAccess.Web.Controllers
         {
             try
             {
-                if (Request.Host.Value != "localhost")
-                {
-                    return Unauthorized();
-                }
+                //if (Request.Host.Value != "localhost")
+                //{
+                //    return Unauthorized();
+                //}
 
                 Result result = await recordService.InsertCode(request.Value);
                 if (result.IsFailed)
