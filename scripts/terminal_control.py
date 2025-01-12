@@ -26,10 +26,11 @@ def load_config():
 
 def main():
     try:
+        url = load_config()
         while True:
             user_input = input("Code: ")
 
-            response = requests.post('http://localhost:8080', data={'value': user_input})
+            response = requests.post(url, data={'value': user_input})
             
             if response.status_code == 200:
                 press_button(relay_pins['relay1'])
