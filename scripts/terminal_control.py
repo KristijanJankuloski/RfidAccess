@@ -31,15 +31,22 @@ def main():
         url = load_config()
         while True:
             user_input = input("Code: ")
-
-            response = requests.post(url, data={'value': user_input})
-            
-            if response.status_code == 200:
-                press_button(relay_pins['relay1'])
-            elif response.status_code == 400:
-                press_button(relay_pins['relay2'])
-            else:
-                print(f"Unexpected response code: {response.status_code}")
+            try:
+                # Send POST request
+                response = requests.post(url, data={'command': user_input})
+                
+                if response.status_code == 200:
+                    # Flip relay1
+                    press_button(relay_pins['relay1'])
+                elif response.status_code == 400:
+                    # Flip relay2
+                    press_button(relay_pins['relay2'])
+                else:
+                    print(f"Unexpected response code: {response.status_code}")
+            except requests.exceptions.ConnectionError:
+                print("Failed to connect to the server. Retrying...")
+            except Exception as e:
+                print(f"An error occurred: {e}")
 
     except KeyboardInterrupt:
         print("Program terminated.")
