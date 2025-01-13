@@ -2,18 +2,23 @@
 using RfidAccess.Web.DataAccess.Repositories.Records;
 using RfidAccess.Web.Models;
 using RfidAccess.Web.Services.Buffer;
+using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels.Base;
+using RfidAccess.Web.ViewModels.Schedule;
+using RfidAccess.Web.Helpers;
 
 namespace RfidAccess.Web.Services.Records
 {
     public class RecordService(
         PersonBufferService personBuffer,
         IRecordRepository recordRepository,
-        IPersonRepository personRepository) : IRecordService
+        IPersonRepository personRepository,
+        IScheduleService scheduleService) : IRecordService
     {
         private readonly PersonBufferService personBuffer = personBuffer;
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IPersonRepository personRepository = personRepository;
+        private readonly IScheduleService scheduleService = scheduleService;
 
         public async Task<Result> InsertCode(string code)
         {
@@ -30,6 +35,28 @@ namespace RfidAccess.Web.Services.Records
                 await personRepository.SaveChanges();
                 personBuffer.People.Remove(personToInsert);
                 return Result.Failure("PERSON_INSERTED");
+            }
+
+            Result<TimeSlotViewModel> timeSlotvm = await scheduleService.GetTimeSlots();
+            if (timeSlotvm.IsFailed || timeSlotvm.Value == null)
+            {
+                return Result.Failure("NOT_FOUND");
+            }
+
+            ConvertedTimeSlot? activeTimeSlot = TimeSlotHelper.GetActiveTimeSlot(timeSlotvm.Value, now);
+            if (activeTimeSlot == null)
+            {
+                return Result.Failure("NO_ACTIVE_TIME_SLOT");
+            }
+
+            List<Record> personRecords = await recordRepository.Filter(q => q
+                .Where(x => x.Code == code &&
+                    x.Time >= activeTimeSlot.Start
+                    && x.Time <= activeTimeSlot.End));
+
+            if (personRecords.Count >= activeTimeSlot.Allowed)
+            {
+                return Result.Failure("DENIED");
             }
 
             Record record = new Record

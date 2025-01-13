@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels;
 using System.Diagnostics;
 
@@ -7,15 +8,30 @@ namespace RfidAccess.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IScheduleService scheduleService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IScheduleService scheduleService)
         {
             _logger = logger;
+            this.scheduleService = scheduleService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var result = await scheduleService.GetActiveTimeSlot();
+                if (result.IsFailed)
+                {
+                    return View(null);
+                }
+                return View(result.Value);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return View();
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

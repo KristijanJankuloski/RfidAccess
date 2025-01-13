@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RfidAccess.Web.DataAccess.Repositories.TimeSlots;
+using RfidAccess.Web.Helpers;
 using RfidAccess.Web.Models;
 using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.Schedule;
@@ -9,6 +10,23 @@ namespace RfidAccess.Web.Services.Schedules
     public class ScheduleService(IWeekTimeSlotsRepository weekTimeSlotsRepository) : IScheduleService
     {
         private readonly IWeekTimeSlotsRepository weekTimeSlotsRepository = weekTimeSlotsRepository;
+
+        public async Task<Result<ConvertedTimeSlot>> GetActiveTimeSlot()
+        {
+            Result<TimeSlotViewModel> allTimeSlots = await GetTimeSlots();
+            if (allTimeSlots.IsFailed || allTimeSlots.Value == null)
+            {
+                return new Result<ConvertedTimeSlot>("NO_SLOT");
+            }
+
+            ConvertedTimeSlot? convertedTimeSlot = TimeSlotHelper.GetActiveTimeSlot(allTimeSlots.Value, DateTime.Now);
+            if (convertedTimeSlot == null)
+            {
+                return new Result<ConvertedTimeSlot>("NO_SLOT");
+            }
+
+            return new Result<ConvertedTimeSlot>(convertedTimeSlot);
+        }
 
         public async Task<Result<TimeSlotViewModel>> GetTimeSlots()
         {
