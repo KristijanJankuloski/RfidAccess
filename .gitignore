@@ -398,3 +398,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/RfidAccess/RfidAccess.Web/default.db
+/RfidAccess/RfidAccess.Web/default.db-shm
+/RfidAccess/RfidAccess.Web/default.db-wal
