@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RfidAccess.Web.Services.People;
 using RfidAccess.Web.ViewModels.People;
 
 namespace RfidAccess.Web.Controllers
 {
+    [Authorize]
     public class PeopleController(IPersonService personService) : Controller
     {
         private readonly IPersonService personService = personService;
