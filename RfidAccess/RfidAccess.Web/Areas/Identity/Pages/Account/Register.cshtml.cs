@@ -96,7 +96,7 @@ namespace RfidAccess.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
-            bool enableRegister = bool.TryParse(_configuration["EnableRegister"], out bool value) && value;
+            bool enableRegister = bool.TryParse(_configuration["EnableRegistration"], out bool value) && value;
             if (!enableRegister)
             {
                 return RedirectToPage("./Login");

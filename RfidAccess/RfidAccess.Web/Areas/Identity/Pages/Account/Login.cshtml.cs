@@ -89,7 +89,7 @@ namespace RfidAccess.Web.Areas.Identity.Pages.Account
             }
 
             returnUrl ??= Url.Content("~/");
-            EnableRegister = bool.TryParse(_config["EnableRegister"], out bool value) && value;
+            EnableRegister = bool.TryParse(_config["EnableRegistration"], out bool value) && value;
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);

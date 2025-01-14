@@ -31,9 +31,10 @@ namespace RfidAccess.Web.Services.Export
                 worksheet.Cells[1, 2].Value = "Презиме";
                 worksheet.Cells[1, 3].Value = "Шифра";
                 worksheet.Cells[1, 4].Value = "Време";
-                worksheet.Cells[1, 5].Value = "Вкупно";
-                worksheet.Cells[2, 5].Value = records.Count;
-                using (var range = worksheet.Cells[1, 1, 1, 4])
+                worksheet.Cells[1, 5].Value = "Дата";
+                worksheet.Cells[1, 7].Value = "Вкупно";
+                worksheet.Cells[2, 7].Value = records.Count;
+                using (var range = worksheet.Cells[1, 1, 1, 5])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -45,7 +46,8 @@ namespace RfidAccess.Web.Services.Export
                     worksheet.Cells[i + 2, 1].Value = records[i]?.Person?.FirstName ?? string.Empty;
                     worksheet.Cells[i + 2, 2].Value = records[i]?.Person?.LastName ?? string.Empty;
                     worksheet.Cells[i + 2, 3].Value = records[i]?.Code ?? string.Empty;
-                    worksheet.Cells[i + 2, 4].Value = records[i]?.Time.ToString("HH:mm dd:MM:yyyy") ?? string.Empty;
+                    worksheet.Cells[i + 2, 4].Value = records[i]?.Time.ToString("HH:mm") ?? string.Empty;
+                    worksheet.Cells[i + 2, 5].Value = records[i]?.Time.ToString("dd:MM:yyyy") ?? string.Empty;
                 }
 
                 var personSheet = package.Workbook.Worksheets.Add("По корисници");
@@ -113,7 +115,7 @@ namespace RfidAccess.Web.Services.Export
                             slotSheet.Cells[i + 2, 1].Value = slotRecords[i]?.Person?.FirstName ?? string.Empty;
                             slotSheet.Cells[i + 2, 2].Value = slotRecords[i]?.Person?.LastName ?? string.Empty;
                             slotSheet.Cells[i + 2, 3].Value = slotRecords[i]?.Code ?? string.Empty;
-                            slotSheet.Cells[i + 2, 4].Value = slotRecords[i]?.Time.ToString("HH:mm dd:MM:yyyy") ?? string.Empty;
+                            slotSheet.Cells[i + 2, 4].Value = slotRecords[i]?.Time.ToString("HH:mm") ?? string.Empty;
                         }
                     });
                     tempDate = tempDate.AddDays(1);
