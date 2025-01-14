@@ -4,6 +4,7 @@ using RfidAccess.Web.DataAccess.Repositories.People;
 using RfidAccess.Web.DataAccess.Repositories.Records;
 using RfidAccess.Web.DataAccess.Repositories.TimeSlots;
 using RfidAccess.Web.Services.Buffer;
+using RfidAccess.Web.Services.Export;
 using RfidAccess.Web.Services.People;
 using RfidAccess.Web.Services.Records;
 using RfidAccess.Web.Services.Schedules;
@@ -22,6 +23,7 @@ builder.Services.AddTransient<IWeekTimeSlotsRepository, WeekTimeSlotsRepository>
 builder.Services.AddScoped<IRecordService, RecordService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddSingleton(new PersonBufferService());
 

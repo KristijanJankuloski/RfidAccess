@@ -49,7 +49,7 @@ namespace RfidAccess.Web.DataAccess.Repositories.Base
             return await context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<T>> GetRange(int skip, int take)
+        public virtual async Task<List<T>> GetRange(int skip, int take)
         {
             return await context.Set<T>()
                 .Skip(skip)

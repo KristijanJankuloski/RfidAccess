@@ -8,5 +8,7 @@ namespace RfidAccess.Web.Services.People
         Result CreatePerson(PersonCreateViewModel viewModel);
 
         Task<Result<PersonCombinedViewModel>> GetAllPeople();
+
+        Task<Result<PersonCombinedViewModel>> GetPaginated(int skip, int take);
     }
 }

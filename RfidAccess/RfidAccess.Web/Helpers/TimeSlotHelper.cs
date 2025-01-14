@@ -28,10 +28,38 @@ namespace RfidAccess.Web.Helpers
             }
         }
 
+        public static List<ConvertedTimeSlot> GetDaySlots(TimeSlotViewModel vm, DateTime date)
+        {
+            switch (date.DayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                    return ExtractTimeSlots(vm.Monday, date);
+                case DayOfWeek.Tuesday:
+                    return ExtractTimeSlots(vm.Tuesday, date);
+                case DayOfWeek.Wednesday:
+                    return ExtractTimeSlots(vm.Wednesday, date);
+                case DayOfWeek.Thursday:
+                    return ExtractTimeSlots(vm.Thursday, date);
+                case DayOfWeek.Friday:
+                    return ExtractTimeSlots(vm.Friday, date);
+                case DayOfWeek.Saturday:
+                    return ExtractTimeSlots(vm.Saturday, date);
+                case DayOfWeek.Sunday:
+                    return ExtractTimeSlots(vm.Sunday, date);
+                default:
+                    return [];
+            }
+        }
+
         private static ConvertedTimeSlot? ExtractTimeSlot(List<TimeSlot> slots, DateTime date)
         {
             return slots.Select(x => new ConvertedTimeSlot(x.Start, x.End, date, x.Allow))
                 .FirstOrDefault(x => x.Start <= date && x.End >= date);
+        }
+
+        private static List<ConvertedTimeSlot> ExtractTimeSlots(List<TimeSlot> slots, DateTime date)
+        {
+            return slots.Select(x => new ConvertedTimeSlot(x.Start, x.End, date, x.Allow)).ToList();
         }
     }
 

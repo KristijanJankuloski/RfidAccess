@@ -5,5 +5,6 @@
 
     public interface IRecordRepository : IRepository<Record>
     {
+        Task<List<Record>> GetFromDates(DateTime start, DateTime end);
     }
 }

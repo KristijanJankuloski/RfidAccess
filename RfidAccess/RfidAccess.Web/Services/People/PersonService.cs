@@ -56,5 +56,40 @@ namespace RfidAccess.Web.Services.People
 
             return new Result<PersonCombinedViewModel>(combined);
         }
+
+        public async Task<Result<PersonCombinedViewModel>> GetPaginated(int skip, int take)
+        {
+            int count = await personRepository.Count();
+            List<Person> people = await personRepository.GetRange(skip, take);
+
+            List<PersonViewModel> response = people.Select(x => new PersonViewModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                CreatedOn = x.CreatedOn,
+                Code = x.Code
+            }).ToList();
+
+            List<PersonViewModel> buffer = personBuffer.People.Select(x => new PersonViewModel
+            {
+                Id = x.Id,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                CreatedOn = x.CreatedOn,
+                Code = x.Code
+            }).ToList();
+
+            PersonCombinedViewModel combined = new PersonCombinedViewModel
+            {
+                Buffer = buffer,
+                People = response,
+                Total = count,
+                Skip = skip,
+                Take = take
+            };
+
+            return new Result<PersonCombinedViewModel>(combined);
+        }
     }
 }

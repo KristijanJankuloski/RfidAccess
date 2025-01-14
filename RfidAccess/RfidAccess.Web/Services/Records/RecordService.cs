@@ -6,6 +6,7 @@ using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.Schedule;
 using RfidAccess.Web.Helpers;
+using RfidAccess.Web.ViewModels.Records;
 
 namespace RfidAccess.Web.Services.Records
 {
@@ -19,6 +20,29 @@ namespace RfidAccess.Web.Services.Records
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IPersonRepository personRepository = personRepository;
         private readonly IScheduleService scheduleService = scheduleService;
+
+        public async Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take)
+        {
+            int count = await recordRepository.Count();
+            List<Record> records = await recordRepository.GetRange(skip, take);
+
+            RecordsListViewModel model = new RecordsListViewModel
+            {
+                Total = count,
+                Skip = skip,
+                Take = take,
+                Records = records.Select(x => new RecordViewModel
+                {
+                    Id = x.Id,
+                    FirstName = x.Person?.FirstName ?? string.Empty,
+                    LastName = x.Person?.LastName ?? string.Empty,
+                    Code = x.Code,
+                    Time = x.Time
+                }).ToList()
+            };
+
+            return new Result<RecordsListViewModel>(model);
+        }
 
         public async Task<Result> InsertCode(string code)
         {
