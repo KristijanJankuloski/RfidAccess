@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels.Schedule;
 
 namespace RfidAccess.Web.Controllers
 {
+    [Authorize]
     public class ScheduleController(IScheduleService scheduleService) : Controller
     {
         private readonly IScheduleService scheduleService = scheduleService;

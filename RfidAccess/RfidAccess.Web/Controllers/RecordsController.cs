@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RfidAccess.Web.Services.Export;
 using RfidAccess.Web.Services.Records;
 
 namespace RfidAccess.Web.Controllers
 {
+    [Authorize]
     public class RecordsController(IRecordService recordService, IExportService exportService) : Controller
     {
         private readonly IRecordService recordService = recordService;

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels;
@@ -16,6 +17,7 @@ namespace RfidAccess.Web.Controllers
             this.scheduleService = scheduleService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             try

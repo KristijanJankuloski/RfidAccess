@@ -8,6 +8,8 @@ using RfidAccess.Web.Services.Export;
 using RfidAccess.Web.Services.People;
 using RfidAccess.Web.Services.Records;
 using RfidAccess.Web.Services.Schedules;
+using RfidAccess.Web.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,17 @@ var builder = WebApplication.CreateBuilder(args);
 string? dataConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<RfidContext>(options => 
     options.UseSqlite(dataConnection));
+
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<RfidContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+    options.LogoutPath = "/Identity/Account/Logout";
+    options.AccessDeniedPath = "/Identity/Account/AccesssDenied";
+});
 
 builder.Services.AddTransient<IPersonRepository, PersonRepository>();
 builder.Services.AddTransient<IRecordRepository, RecordRepository>();
@@ -28,6 +41,7 @@ builder.Services.AddScoped<IExportService, ExportService>();
 builder.Services.AddSingleton(new PersonBufferService());
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -40,8 +54,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
