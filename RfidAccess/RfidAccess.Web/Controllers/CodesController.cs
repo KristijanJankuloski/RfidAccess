@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RfidAccess.Web.Services.Records;
 using RfidAccess.Web.ViewModels;
@@ -13,6 +14,7 @@ namespace RfidAccess.Web.Controllers
         private readonly IRecordService recordService = recordService;
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> AddRecord([FromBody] ValueRequest request)
         {
             try
