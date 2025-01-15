@@ -33,7 +33,7 @@ def main():
             user_input = input("Code: ")
             try:
                 # Send POST request
-                response = requests.post(url, data={'command': user_input})
+                response = requests.post(url, data=json.dumps({'value': user_input}), headers={'Content-Type': 'application/json'})
                 
                 if response.status_code == 200:
                     # Flip relay1
