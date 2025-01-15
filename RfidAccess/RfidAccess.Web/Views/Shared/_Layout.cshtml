@@ -1,6 +1,10 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using RfidAccess.Web.Models
+@{
     ViewData["CurrentYear"] = DateTime.Now.Year;
 }
+@inject SignInManager<User> SignInManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,20 +27,22 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Schedule" asp-action="Index">Распоред</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Records" asp-action="Index">Лог</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Корисници</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User)){
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Почеток</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Schedule" asp-action="Index">Распоред</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Records" asp-action="Index">Лог</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="People" asp-action="Index">Корисници</a>
+                            </li>
+                        }
                     </ul>
-                    <a class="btn btn-outline-secondary" href="/Identity/Account/Logout">Одјава</a>
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
@@ -49,7 +55,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @ViewData["CurrentYear"] - VA Пристап
+            &copy; @ViewData["CurrentYear"] - Видео Аларм
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
