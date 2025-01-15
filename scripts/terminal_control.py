@@ -8,17 +8,18 @@ GPIO.setmode(GPIO.BCM)
 
 relay_pins = {
     'relay1': 17,  # GPIO17
-    'relay2': 27   # GPIO27
+    'relay2': 27,  # GPIO27
+    'relay3': 22   # GPIO22
 }
 
 for pin in relay_pins.values():
     GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.LOW)
+    GPIO.output(pin, GPIO.HIGH)
 
-def press_button(relay_pin):
-    GPIO.output(relay_pin, GPIO.HIGH)
-    time.sleep(0.5)
+def press_button(relay_pin, delay):
     GPIO.output(relay_pin, GPIO.LOW)
+    time.sleep(delay)
+    GPIO.output(relay_pin, GPIO.HIGH)
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), 'config.json')
@@ -36,11 +37,11 @@ def main():
                 response = requests.post(url, data=json.dumps({'value': user_input}), headers={'Content-Type': 'application/json'})
                 
                 if response.status_code == 200:
-                    # Flip relay1
-                    press_button(relay_pins['relay1'])
+                    press_button(relay_pins['relay1'], 0.5)
                 elif response.status_code == 400:
-                    # Flip relay2
-                    press_button(relay_pins['relay2'])
+                    press_button(relay_pins['relay2'], 1)
+                elif response.status_code == 201:
+                    press_button(relay_pins['relay3'], 0.5)
                 else:
                     print(f"Unexpected response code: {response.status_code}")
             except requests.exceptions.ConnectionError:
