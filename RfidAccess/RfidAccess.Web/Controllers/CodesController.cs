@@ -19,7 +19,7 @@ namespace RfidAccess.Web.Controllers
         {
             try
             {
-                if (Request.Host.Value != "127.0.0.1")
+                if (Request.Host.Value != "127.0.0.1:8000")
                 {
                     return Unauthorized();
                 }
