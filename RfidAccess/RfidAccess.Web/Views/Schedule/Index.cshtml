@@ -1,6 +1,7 @@
 ﻿@model TimeSlotViewModel
 @{
     ViewData["Title"] = "Распоред";
+    ViewData["Weekdays"] = new List<string> { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 }
 
 <form method="post" asp-action="Update">
@@ -10,535 +11,67 @@
     </div>
     <div class="row">
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Понеделник</h5>
-                </div>
-                <div class="card-body" id="MondayCardBody">
-                    @if (Model.Monday.Count == 0)
-                    {
-                        <div id="mondaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Monday_Start0">Почеток</label>
-                            <input id="Monday_Start0" name="Monday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Monday_End0">Крај</label>
-                            <input id="Monday_End0" name="Monday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Monday_Allow0">Дозволи</label>
-                            <input id="Monday_Allow0" name="Monday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Monday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"mondaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeMondayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Monday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Monday_Start{slot.i}")" name="@($"Monday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Monday_End{slot.i}")">Крај</label>
-                                <input id="@($"Monday_End{slot.i}")" name="@($"Monday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Monday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Monday_Allow{slot.i}")" name="@($"Monday[{slot.i}].Allow")" type="number" value="@slot.value.Allow" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addMondayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Monday, "Monday", "Понеделник"))" />
         </div>
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Вторник</h5>
-                </div>
-                <div class="card-body" id="TuesdayCardBody">
-                    @if (Model.Tuesday.Count == 0)
-                    {
-                        <div id="tuesdaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Tuesday_Start0">Почеток</label>
-                            <input id="Tuesday_Start0" name="Tuesday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Tuesday_End0">Крај</label>
-                            <input id="Tuesday_End0" name="Tuesday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Tuesday_Allow0">Дозволи</label>
-                            <input id="Tuesday_Allow0" name="Tuesday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Tuesday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"tuesdaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeTuesdayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Tuesday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Tuesday_Start{slot.i}")" name="@($"Tuesday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Tuesday_End{slot.i}")">Крај</label>
-                                <input id="@($"Tuesday_End{slot.i}")" name="@($"Tuesday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Tuesday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Tuesday_Allow{slot.i}")" name="@($"Tuesday[{slot.i}].Allow")" type="number" value="@slot.value.Allow" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addTuesdayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Tuesday, "Tuesday", "Вторник"))" />
         </div>
-
-        <!-- Wednesday Column -->
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Среда</h5>
-                </div>
-                <div class="card-body" id="WednesdayCardBody">
-                    @if (Model.Wednesday.Count == 0)
-                    {
-                        <div id="wednesdaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Wednesday_Start0">Почеток</label>
-                            <input id="Wednesday_Start0" name="Wednesday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Wednesday_End0">Крај</label>
-                            <input id="Wednesday_End0" name="Wednesday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Wednesday_Allow0">Дозволи</label>
-                            <input id="Wednesday_Allow0" name="Wednesday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Wednesday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"wednesdaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeWednesdayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Wednesday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Wednesday_Start{slot.i}")" name="@($"Wednesday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Wednesday_End{slot.i}")">Крај</label>
-                                <input id="@($"Wednesday_End{slot.i}")" name="@($"Wednesday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Wednesday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Wednesday_Allow{slot.i}")" name="@($"Wednesday[{slot.i}].Allow")" value="@slot.value.Allow" type="number" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addWednesdayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Wednesday, "Wednesday", "Среда"))" />
         </div>
-
-        <!-- Thursday Column -->
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Четврток</h5>
-                </div>
-                <div class="card-body" id="ThursdayCardBody">
-                    @if (Model.Thursday.Count == 0)
-                    {
-                        <div id="thursdaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Thursday_Start0">Почеток</label>
-                            <input id="Thursday_Start0" name="Thursday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Thursday_End0">Крај</label>
-                            <input id="Thursday_End0" name="Thursday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Thursday_Allow0">Дозволи</label>
-                            <input id="Thursday_Allow0" name="Thursday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Thursday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"thursdaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeThursdayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Thursday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Thursday_Start{slot.i}")" name="@($"Thursday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Thursday_End{slot.i}")">Крај</label>
-                                <input id="@($"Thursday_End{slot.i}")" name="@($"Thursday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Thursday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Thursday_Allow{slot.i}")" name="@($"Thursday[{slot.i}].Allow")" value="@slot.value.Allow" type="number" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addThursdayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Thursday, "Thursday", "Четврток"))" />
         </div>
-
-        <!-- Friday Column -->
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Петок</h5>
-                </div>
-                <div class="card-body" id="FridayCardBody">
-                    @if (Model.Friday.Count == 0)
-                    {
-                        <div id="fridaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Friday_Start0">Почеток</label>
-                            <input id="Friday_Start0" name="Friday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Friday_End0">Крај</label>
-                            <input id="Friday_End0" name="Friday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Friday_Allow0">Дозволи</label>
-                            <input id="Friday_Allow0" name="Friday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Friday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"fridaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeFridayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Friday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Friday_Start{slot.i}")" name="@($"Friday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Friday_End{slot.i}")">Крај</label>
-                                <input id="@($"Friday_End{slot.i}")" name="@($"Friday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Friday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Friday_Allow{slot.i}")" name="@($"Friday[{slot.i}].Allow")" value="@slot.value.Allow" type="number" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addFridayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Friday, "Friday", "Петок"))" />
         </div>
-
-        <!-- Saturday Column -->
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Сабота</h5>
-                </div>
-                <div class="card-body" id="SaturdayCardBody">
-                    @if (Model.Saturday.Count == 0)
-                    {
-                        <div id="saturdaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Saturday_Start0">Почеток</label>
-                            <input id="Saturday_Start0" name="Saturday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Saturday_End0">Крај</label>
-                            <input id="Saturday_End0" name="Saturday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Saturday_Allow0">Дозволи</label>
-                            <input id="Saturday_Allow0" name="Saturday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Saturday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"saturdaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeSaturdayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Saturday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Saturday_Start{slot.i}")" name="@($"Saturday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Saturday_End{slot.i}")">Крај</label>
-                                <input id="@($"Saturday_End{slot.i}")" name="@($"Saturday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Saturday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Saturday_Allow{slot.i}")" name="@($"Saturday[{slot.i}].Allow")" value="@slot.value.Allow" type="number" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addSaturdayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Saturday, "Saturday", "Сабота"))" />
         </div>
-
-        <!-- Sunday Column -->
         <div class="col-lg-3 mb-3">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Недела</h5>
-                </div>
-                <div class="card-body" id="SundayCardBody">
-                    @if (Model.Sunday.Count == 0)
-                    {
-                        <div id="sundaySlot0" class="mb-2">
-                            <span>Оброк 1</span>
-                            <br />
-                            <label for="Sunday_Start0">Почеток</label>
-                            <input id="Sunday_Start0" name="Sunday[0].Start" type="time" class="form-control mb-2" />
-                            <label for="Sunday_End0">Крај</label>
-                            <input id="Sunday_End0" name="Sunday[0].End" type="time" class="form-control mb-2" />
-                            <label for="Sunday_Allow0">Дозволи</label>
-                            <input id="Sunday_Allow0" name="Sunday[0].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>
-                    }
-                    else
-                    {
-                        @foreach (var slot in Model.Sunday.Select((value, i) => new { i, value }))
-                        {
-                            <div id="@($"sundaySlot{slot.i}")" class="mb-2">
-                                <span>Оброк @(slot.i + 1)</span>
-                                @if (slot.i != 0)
-                                {
-                                    <button class="btn btn-sm btn-danger me-2" onclick="@($"removeSundayTime({slot.i})")">X</button>
-                                }
-                                <br />
-                                <label for="@($"Sunday_Start{slot.i}")">Почеток</label>
-                                <input id="@($"Sunday_Start{slot.i}")" name="@($"Sunday[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
-                                <label for="@($"Sunday_End{slot.i}")">Крај</label>
-                                <input id="@($"Sunday_End{slot.i}")" name="@($"Sunday[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
-                                <label for="@($"Sunday_Allow{slot.i}")">Дозволи</label>
-                                <input id="@($"Sunday_Allow{slot.i}")" name="@($"Sunday[{slot.i}].Allow")" value="@slot.value.Allow" type="number" min="1" step="1" class="form-control" />
-                                <hr />
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="card-footer">
-                    <button type="button" class="btn btn-sm btn-success" onclick="addSundayTime()">Додади време</button>
-                </div>
-            </div>
+            <partial name="_DayInputForm" model="@(new DayInputPartialViewModel(Model.Sunday, "Sunday", "Недела"))" />
         </div>
     </div>
 </form>
 
 <script>
-    let mondayCounter = @(Model.Monday.Count == 0 ? 1 : Model.Monday.Count);
-    let tuesdayCounter = @(Model.Tuesday.Count == 0 ? 1 : Model.Tuesday.Count);
-    let wednesdayCounter = @(Model.Wednesday.Count == 0 ? 1 : Model.Wednesday.Count);
-    let thursdayCounter = @(Model.Thursday.Count == 0 ? 1 : Model.Thursday.Count);
-    let fridayCounter = @(Model.Friday.Count == 0 ? 1 : Model.Friday.Count);
-    let saturdayCounter = @(Model.Saturday.Count == 0 ? 1 : Model.Saturday.Count);
-    let sundayCounter = @(Model.Sunday.Count == 0 ? 1 : Model.Sunday.Count);
-
-    function addMondayTime() {
-        const mondayCardBody = document.getElementById('MondayCardBody');
-        const newFields = `
-                        <div id="mondaySlot${mondayCounter}" class="mb-2">
-                            <span>Оброк ${mondayCounter + 1}</span>
-                            <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeMondayTime(${mondayCounter})">X</button>
-                            <br>
-                            <label for="Monday_Start${mondayCounter}">Почеток</label>
-                            <input id="Monday_Start${mondayCounter}" name="Monday[${mondayCounter}].Start" type="time" class="form-control mb-2" />
-                            <label for="Monday_End${mondayCounter}">Крај</label>
-                            <input id="Monday_End${mondayCounter}" name="Monday[${mondayCounter}].End" type="time" class="form-control mb-2" />
-                            <label for="Monday_Allow${mondayCounter}">Дозволи</label>
-                            <input id="Monday_Allow${mondayCounter}" name="Monday[${mondayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>`;
-        mondayCardBody.insertAdjacentHTML('beforeend', newFields);
-        mondayCounter++;
+    let counters = {
+        'Monday': @(Model.Monday.Count == 0 ? 1 : Model.Monday.Count),
+        'Tuesday': @(Model.Tuesday.Count == 0 ? 1 : Model.Tuesday.Count),
+        'Wednesday': @(Model.Wednesday.Count == 0 ? 1 : Model.Wednesday.Count),
+        'Thursday': @(Model.Thursday.Count == 0 ? 1 : Model.Thursday.Count),
+        'Friday': @(Model.Friday.Count == 0 ? 1 : Model.Friday.Count),
+        'Saturday': @(Model.Saturday.Count == 0 ? 1 : Model.Saturday.Count),
+        'Sunday': @(Model.Sunday.Count == 0 ? 1 : Model.Sunday.Count)
     }
 
-    function removeMondayTime(slot) {
-        const slotElement = document.getElementById(`mondaySlot${slot}`);
+    function addDayTime(day) {
+        const cardBody = document.getElementById(`${day}CardBody`);
+        const newFields = `
+                            <div id="${day.toLowerCase()}Slot${counters[day]}" class="mb-2">
+                                <span>Оброк ${counters[day] + 1}</span>
+                                <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeDayTime('${day}', ${counters[day]})">X</button>
+                                <br>
+                                <label for="${day}_Start${counters[day]}">Почеток</label>
+                                <input id="${day}_Start${counters[day]}" name="${day}[${counters[day]}].Start" type="time" class="form-control mb-2" />
+                                <label for="${day}_End${counters[day]}">Крај</label>
+                                <input id="${day}_End${counters[day]}" name="${day}[${counters[day]}].End" type="time" class="form-control mb-2" />
+                                <label for="${day}_Allow${counters[day]}">Дозволи</label>
+                                <input id="${day}_Allow${counters[day]}" name="${day}[${counters[day]}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
+                                <hr />
+                            </div>`;
+        cardBody.insertAdjacentHTML('beforeend', newFields);
+        counters[day]++;
+    }
+
+    function removeDayTime(day, slot) {
+        if (counters[day] <= 1){
+            return;
+        }
+        counters[day]--;
+        const slotElement = document.getElementById(`${day.toLowerCase()}Slot${counters[day]}`);
         if (slotElement) {
             slotElement.remove();
         }
-    }
-
-    function addTuesdayTime() {
-        const tuesdayCardBody = document.getElementById('TuesdayCardBody');
-        const newFields = `
-                        <div id="tuesdaySlot${tuesdayCounter}" class="mb-2">
-                            <span>Оброк ${tuesdayCounter + 1}</span>
-                            <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeTuesdayTime(${tuesdayCounter})">X</button>
-                            <br>
-                            <label for="Tuesday_Start${tuesdayCounter}">Почеток</label>
-                            <input id="Tuesday_Start${tuesdayCounter}" name="Tuesday[${tuesdayCounter}].Start" type="time" class="form-control mb-2" />
-                            <label for="Tuesday_End${tuesdayCounter}">Крај</label>
-                            <input id="Tuesday_End${tuesdayCounter}" name="Tuesday[${tuesdayCounter}].End" type="time" class="form-control mb-2" />
-                            <label for="Tuesday_Allow${tuesdayCounter}">Дозволи</label>
-                            <input id="Tuesday_Allow${mondayCounter}" name="Tuesday[${tuesdayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                            <hr />
-                        </div>`;
-        tuesdayCardBody.insertAdjacentHTML('beforeend', newFields);
-        tuesdayCounter++;
-    }
-
-    function removeTuesdayTime(slot) {
-        const slotElement = document.getElementById(`tuesdaySlot${slot}`);
-        if (slotElement) {
-            slotElement.remove();
-        }
-    }
-
-    // Add a new time slot for Wednesday
-    function addWednesdayTime() {
-        let container = document.getElementById("WednesdayCardBody");
-        let newSlot = `
-                <div id="wednesdaySlot${wednesdayCounter}" class="mb-2">
-                    <span>Оброк ${wednesdayCounter + 1}</span>
-                    <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeWednesdayTime(${wednesdayCounter})">X</button>
-                    <br>
-                    <label for="Wednesday_Start${wednesdayCounter}">Почеток</label>
-                    <input id="Wednesday_Start${wednesdayCounter}" name="Wednesday[${wednesdayCounter}].Start" type="time" class="form-control mb-2" />
-                    <label for="Wednesday_End${wednesdayCounter}">Крај</label>
-                    <input id="Wednesday_End${wednesdayCounter}" name="Wednesday[${wednesdayCounter}].End" type="time" class="form-control mb-2" />
-                    <label for="Wednesday_Allow${wednesdayCounter}">Дозволи</label>
-                    <input id="Wednesday_Allow${wednesdayCounter}" name="Wednesday[${wednesdayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                    <hr />
-                </div>`;
-        container.insertAdjacentHTML('beforeend', newSlot);
-        wednesdayCounter++;
-    }
-
-    // Remove a time slot for Wednesday
-    function removeWednesdayTime(index) {
-        let slot = document.getElementById(`wednesdaySlot${index}`);
-        if (slot) slot.remove();
-    }
-
-    // Add a new time slot for Thursday
-    function addThursdayTime() {
-        let container = document.getElementById("ThursdayCardBody");
-        let newSlot = `
-                <div id="thursdaySlot${thursdayCounter}" class="mb-2">
-                    <span>Оброк ${thursdayCounter + 1}</span>
-                    <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeThursdayTime(${thursdayCounter})">X</button>
-                    <br>
-                    <label for="Thursday_Start${thursdayCounter}">Почеток</label>
-                    <input id="Thursday_Start${thursdayCounter}" name="Thursday[${thursdayCounter}].Start" type="time" class="form-control mb-2" />
-                    <label for="Thursday_End${thursdayCounter}">Крај</label>
-                    <input id="Thursday_End${thursdayCounter}" name="Thursday[${thursdayCounter}].End" type="time" class="form-control mb-2" />
-                    <label for="Thursday_Allow${thursdayCounter}">Дозволи</label>
-                    <input id="Thursday_Allow${thursdayCounter}" name="Thursday[${thursdayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                    <hr />
-                </div>`;
-        container.insertAdjacentHTML('beforeend', newSlot);
-        thursdayCounter++;
-    }
-
-    // Remove a time slot for Thursday
-    function removeThursdayTime(index) {
-        let slot = document.getElementById(`thursdaySlot${index}`);
-        if (slot) slot.remove();
-    }
-
-    // Add a new time slot for Friday
-    function addFridayTime() {
-        let container = document.getElementById("FridayCardBody");
-        let newSlot = `
-                <div id="fridaySlot${fridayCounter}" class="mb-2">
-                    <span>Оброк ${fridayCounter + 1}</span>
-                    <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeFridayTime(${fridayCounter})">X</button>
-                    <br>
-                    <label for="Friday_Start${fridayCounter}">Почеток</label>
-                    <input id="Friday_Start${fridayCounter}" name="Friday[${fridayCounter}].Start" type="time" class="form-control mb-2" />
-                    <label for="Friday_End${fridayCounter}">Крај</label>
-                    <input id="Friday_End${fridayCounter}" name="Friday[${fridayCounter}].End" type="time" class="form-control mb-2" />
-                    <label for="Friday_Allow${fridayCounter}">Дозволи</label>
-                    <input id="Friday_Allow${fridayCounter}" name="Friday[${fridayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                    <hr />
-                </div>`;
-        container.insertAdjacentHTML('beforeend', newSlot);
-        fridayCounter++;
-    }
-
-    // Remove a time slot for Friday
-    function removeFridayTime(index) {
-        let slot = document.getElementById(`fridaySlot${index}`);
-        if (slot) slot.remove();
-    }
-
-    // Add a new time slot for Saturday
-    function addSaturdayTime() {
-        let container = document.getElementById("SaturdayCardBody");
-        let newSlot = `
-                <div id="saturdaySlot${saturdayCounter}" class="mb-2">
-                    <span>Оброк ${saturdayCounter + 1}</span>
-                    <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeSaturdayTime(${saturdayCounter})">X</button>
-                    <br>
-                    <label for="Saturday_Start${saturdayCounter}">Почеток</label>
-                    <input id="Saturday_Start${saturdayCounter}" name="Saturday[${saturdayCounter}].Start" type="time" class="form-control mb-2" />
-                    <label for="Saturday_End${saturdayCounter}">Крај</label>
-                        <input id="Saturday_End${saturdayCounter}" name="Saturday[${saturdayCounter}].End" type="time" class="form-control mb-2" />
-                    <label for="Saturday_Allow${saturdayCounter}">Дозволи</label>
-                    <input id="Saturday_Allow${saturdayCounter}" name="Saturday[${saturdayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                    <hr />
-                </div>`;
-        container.insertAdjacentHTML('beforeend', newSlot);
-        saturdayCounter++;
-    }
-
-    // Remove a time slot for Saturday
-    function removeSaturdayTime(index) {
-        let slot = document.getElementById(`saturdaySlot${index}`);
-        if (slot) slot.remove();
-    }
-
-    // Add a new time slot for Sunday
-    function addSundayTime() {
-        let container = document.getElementById("SundayCardBody");
-        let newSlot = `
-                <div id="sundaySlot${sundayCounter}" class="mb-2">
-                    <span>Оброк ${sundayCounter + 1}</span>
-                    <button class="btn btn-sm btn-danger me-2" type="button" onclick="removeSundayTime(${sundayCounter})">X</button>
-                    <br>
-                    <label for="Sunday_Start${sundayCounter}">Почеток</label>
-                    <input id="Sunday_Start${sundayCounter}" name="Sunday[${sundayCounter}].Start" type="time" class="form-control mb-2" />
-                    <label for="Sunday_End${sundayCounter}">Крај</label>
-                        <input id="Sunday_End${sundayCounter}" name="Sunday[${sundayCounter}].End" type="time" class="form-control mb-2" />
-                    <label for="Sunday_Allow${sundayCounter}">Дозволи</label>
-                    <input id="Sunday_Allow${sundayCounter}" name="Sunday[${sundayCounter}].Allow" type="number" value="1" min="1" step="1" class="form-control" />
-                    <hr />
-                </div>`;
-        container.insertAdjacentHTML('beforeend', newSlot);
-        sundayCounter++;
-    }
-
-    // Remove a time slot for Sunday
-    function removeSundayTime(index) {
-        let slot = document.getElementById(`sundaySlot${index}`);
-        if (slot) slot.remove();
     }
 </script>

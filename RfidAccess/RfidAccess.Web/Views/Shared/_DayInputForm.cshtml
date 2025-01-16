@@ -1,0 +1,47 @@
+﻿@model DayInputPartialViewModel
+
+<div class="card">
+    <div class="card-header">
+        <h5>@Model.Title</h5>
+    </div>
+    <div class="card-body" id="@($"{Model.DayName}CardBody")">
+        @if (Model.DaySlots.Count == 0)
+        {
+            <div id="@($"{Model.DayName.ToLower()}Slot0")" class="mb-2">
+                <span>Оброк 1</span>
+                <br />
+                <label for="@($"{Model.DayName}_Start0")">Почеток</label>
+                <input id="@($"{Model.DayName}_Start0")" name="@($"{Model.DayName}[0].Start")" type="time" class="form-control mb-2" />
+                <label for="@($"{Model.DayName}_End0")">Крај</label>
+                <input id="@($"{Model.DayName}_End0")" name="@($"{Model.DayName}[0].End")" type="time" class="form-control mb-2" />
+                <label for="@($"{Model.DayName}_Allow0")">Дозволи</label>
+                <input id="@($"{Model.DayName}_Allow0")" name="@($"{Model.DayName}[0].Allow")" type="number" value="1" min="1" step="1" class="form-control" />
+                <hr />
+            </div>
+        }
+        else
+        {
+            @foreach (var slot in Model.DaySlots.Select((value, i) => new { i, value }))
+            {
+                <div id="@($"{Model.DayName.ToLower()}Slot{slot.i}")" class="mb-2">
+                    <span>Оброк @(slot.i + 1)</span>
+                    @if (slot.i != 0)
+                    {
+                        <button class="btn btn-sm btn-danger me-2" onclick="@($"removeDayTime('{Model.DayName}', {slot.i})")">X</button>
+                    }
+                    <br />
+                    <label for="@($"{Model.DayName}_Start{slot.i}")">Почеток</label>
+                    <input id="@($"{Model.DayName}_Start{slot.i}")" name="@($"{Model.DayName}[{slot.i}].Start")" value="@slot.value.Start" type="time" class="form-control mb-2" />
+                    <label for="@($"{Model.DayName}_End{slot.i}")">Крај</label>
+                    <input id="@($"{Model.DayName}_End{slot.i}")" name="@($"{Model.DayName}[{slot.i}].End")" value="@slot.value.End" type="time" class="form-control mb-2" />
+                    <label for="@($"{Model.DayName}_Allow{slot.i}")">Дозволи</label>
+                    <input id="@($"{Model.DayName}_Allow{slot.i}")" name="@($"{Model.DayName}[{slot.i}].Allow")" type="number" value="@slot.value.Allow" min="1" step="1" class="form-control" />
+                    <hr />
+                </div>
+            }
+        }
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-sm btn-success" onclick="@($"addDayTime('{Model.DayName}')")">Додади време</button>
+    </div>
+</div>
