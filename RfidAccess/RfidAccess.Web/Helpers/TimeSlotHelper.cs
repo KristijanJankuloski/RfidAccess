@@ -1,5 +1,4 @@
 ﻿using RfidAccess.Web.ViewModels.Schedule;
-using System.Linq;
 
 namespace RfidAccess.Web.Helpers
 {

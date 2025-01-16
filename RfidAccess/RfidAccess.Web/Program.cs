@@ -10,6 +10,9 @@ using RfidAccess.Web.Services.Records;
 using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using RfidAccess.Web.Hub;
+using RfidAccess.Web.Services.HubService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddTransient<IPersonRepository, PersonRepository>();
 builder.Services.AddTransient<IRecordRepository, RecordRepository>();
 builder.Services.AddTransient<IWeekTimeSlotsRepository, WeekTimeSlotsRepository>();
+builder.Services.AddTransient<IHubService, HubService>();
 
 builder.Services.AddScoped<IRecordService, RecordService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
@@ -40,6 +44,7 @@ builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddSingleton(new PersonBufferService());
 
+builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
@@ -61,6 +66,7 @@ app.MapRazorPages();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapHub<NotificationHub>("/notifications");
 
 using (var scope = app.Services.CreateScope())
 {

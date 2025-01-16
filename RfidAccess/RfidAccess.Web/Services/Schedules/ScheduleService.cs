@@ -11,6 +11,26 @@ namespace RfidAccess.Web.Services.Schedules
     {
         private readonly IWeekTimeSlotsRepository weekTimeSlotsRepository = weekTimeSlotsRepository;
 
+        public async Task<Result<ActiveTimeSlotViewModel>> GetActiveAndNext()
+        {
+            Result<TimeSlotViewModel> allTimeSlots = await GetTimeSlots();
+            if (allTimeSlots.IsFailed || allTimeSlots.Value == null)
+            {
+                return new Result<ActiveTimeSlotViewModel>("NO_SLOT");
+            }
+
+            ConvertedTimeSlot? convertedTimeSlot = TimeSlotHelper.GetActiveTimeSlot(allTimeSlots.Value, DateTime.Now);
+            ConvertedTimeSlot? nextSlot = TimeSlotHelper.GetDaySlots(allTimeSlots.Value, DateTime.Now)
+                .Where(x => x.Start > convertedTimeSlot?.End)
+                .FirstOrDefault();
+
+            return new Result<ActiveTimeSlotViewModel>(new ActiveTimeSlotViewModel
+            {
+                Active = convertedTimeSlot,
+                Next = nextSlot
+            });
+        }
+
         public async Task<Result<ConvertedTimeSlot>> GetActiveTimeSlot()
         {
             Result<TimeSlotViewModel> allTimeSlots = await GetTimeSlots();

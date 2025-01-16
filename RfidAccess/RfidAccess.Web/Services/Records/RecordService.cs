@@ -7,6 +7,8 @@ using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.Schedule;
 using RfidAccess.Web.Helpers;
 using RfidAccess.Web.ViewModels.Records;
+using RfidAccess.Web.Services.HubService;
+using RfidAccess.Web.Hub;
 
 namespace RfidAccess.Web.Services.Records
 {
@@ -14,12 +16,14 @@ namespace RfidAccess.Web.Services.Records
         PersonBufferService personBuffer,
         IRecordRepository recordRepository,
         IPersonRepository personRepository,
-        IScheduleService scheduleService) : IRecordService
+        IScheduleService scheduleService,
+        IHubService hubService) : IRecordService
     {
         private readonly PersonBufferService personBuffer = personBuffer;
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IPersonRepository personRepository = personRepository;
         private readonly IScheduleService scheduleService = scheduleService;
+        private readonly IHubService hubService = hubService;
 
         public async Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take)
         {
@@ -52,12 +56,22 @@ namespace RfidAccess.Web.Services.Records
             {
                 Person? personToInsert = personBuffer.People.FirstOrDefault();
                 if (personToInsert == null)
+                {
+                    NotificationDto dto = new NotificationDto
+                    {
+                        Message = "Непозната картичка",
+                        Code = code,
+                        Date = now.ToString("HH:mm dd.MM.yyyy")
+                    };
+                    await hubService.SendNotification(dto);
                     return Result.Failure("CODE_NOT_FOUND");
+                }
 
                 personToInsert.Code = code;
                 personRepository.Create(personToInsert);
                 await personRepository.SaveChanges();
                 personBuffer.People.Remove(personToInsert);
+                await hubService.SendConfirmation(code);
                 return Result.Failure("PERSON_INSERTED");
             }
 
@@ -78,12 +92,26 @@ namespace RfidAccess.Web.Services.Records
             Result<TimeSlotViewModel> timeSlotvm = await scheduleService.GetTimeSlots();
             if (timeSlotvm.IsFailed || timeSlotvm.Value == null)
             {
+                NotificationDto dto = new NotificationDto
+                {
+                    Message = $"{person.FirstName} {person.LastName} - Надвор од време",
+                    Code = code,
+                    Date = now.ToString("HH:mm dd.MM.yyyy")
+                };
+                await hubService.SendNotification(dto);
                 return Result.Failure("NOT_FOUND");
             }
 
             ConvertedTimeSlot? activeTimeSlot = TimeSlotHelper.GetActiveTimeSlot(timeSlotvm.Value, now);
             if (activeTimeSlot == null)
             {
+                NotificationDto dto = new NotificationDto
+                {
+                    Message = $"{person.FirstName} {person.LastName} - Надвор од време",
+                    Code = code,
+                    Date = now.ToString("HH:mm dd.MM.yyyy")
+                };
+                await hubService.SendNotification(dto);
                 return Result.Failure("NO_ACTIVE_TIME_SLOT");
             }
 
@@ -94,6 +122,13 @@ namespace RfidAccess.Web.Services.Records
 
             if (personRecords.Count >= activeTimeSlot.Allowed)
             {
+                NotificationDto dto = new NotificationDto
+                {
+                    Message = $"{person.FirstName} {person.LastName} - Веќе влезен",
+                    Code = code,
+                    Date = now.ToString("HH:mm dd.MM.yyyy")
+                };
+                await hubService.SendNotification(dto);
                 return Result.Failure("DENIED");
             }
 

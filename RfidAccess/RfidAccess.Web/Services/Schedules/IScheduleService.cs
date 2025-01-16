@@ -10,6 +10,8 @@ namespace RfidAccess.Web.Services.Schedules
 
         Task<Result<ConvertedTimeSlot>> GetActiveTimeSlot();
 
+        Task<Result<ActiveTimeSlotViewModel>> GetActiveAndNext();
+
         Task<Result> UpdateTimeSlots(TimeSlotViewModel viewModel);
     }
 }

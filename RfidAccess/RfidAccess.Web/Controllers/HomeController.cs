@@ -22,7 +22,7 @@ namespace RfidAccess.Web.Controllers
         {
             try
             {
-                var result = await scheduleService.GetActiveTimeSlot();
+                var result = await scheduleService.GetActiveAndNext();
                 if (result.IsFailed)
                 {
                     return View(null);
