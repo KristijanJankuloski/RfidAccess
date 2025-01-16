@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RfidAccess.Web.Models
 {
+    [Index(nameof(Code), nameof(Time))]
     public class Record : BaseEntity
     {
         [MaxLength(150)]

@@ -11,5 +11,7 @@
         public string? Code { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        public bool IsWhitelisted { get; set; }
     }
 }

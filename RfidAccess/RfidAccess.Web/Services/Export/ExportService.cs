@@ -47,7 +47,7 @@ namespace RfidAccess.Web.Services.Export
                     worksheet.Cells[i + 2, 2].Value = records[i]?.Person?.LastName ?? string.Empty;
                     worksheet.Cells[i + 2, 3].Value = records[i]?.Code ?? string.Empty;
                     worksheet.Cells[i + 2, 4].Value = records[i]?.Time.ToString("HH:mm") ?? string.Empty;
-                    worksheet.Cells[i + 2, 5].Value = records[i]?.Time.ToString("dd:MM:yyyy") ?? string.Empty;
+                    worksheet.Cells[i + 2, 5].Value = records[i]?.Time.ToString("dd.MM.yyyy") ?? string.Empty;
                 }
 
                 var personSheet = package.Workbook.Worksheets.Add("По корисници");
@@ -65,10 +65,11 @@ namespace RfidAccess.Web.Services.Export
                 for (int i = 0; i < personGroup.Count; i++)
                 {
                     Record? firstRecord = personGroup[i].FirstOrDefault();
+                    int groupCount = personGroup[i].Count();
                     personSheet.Cells[i + 2, 1].Value = firstRecord?.Person?.FirstName ?? string.Empty;
                     personSheet.Cells[i + 2, 2].Value = firstRecord?.Person?.LastName ?? string.Empty;
                     personSheet.Cells[i + 2, 3].Value = firstRecord?.Code ?? string.Empty;
-                    personSheet.Cells[i + 2, 4].Value = personGroup[i].Count();
+                    personSheet.Cells[i + 2, 4].Value = groupCount;
                 }
 
                 TimeSlotViewModel? vm = (await scheduleService.GetTimeSlots()).Value;

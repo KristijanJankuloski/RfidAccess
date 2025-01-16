@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RfidAccess.Web.Models;
 using RfidAccess.Web.Services.People;
 using RfidAccess.Web.ViewModels.People;
 
@@ -56,6 +57,52 @@ namespace RfidAccess.Web.Controllers
                 else
                 {
                     TempData["Success"] = "Created";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var result = await personService.DeletePerson(id);
+                if (result.IsFailed)
+                {
+                    TempData["Error"] = result.Message;
+                }
+                else
+                {
+                    TempData["Success"] = "Deleted";
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        
+        public async Task<IActionResult> Edit(int id)
+        {
+            try
+            {
+                var result = await personService.ToggleWhiteListPerson(id);
+                if (result.IsFailed)
+                {
+                    TempData["Error"] = result.Message;
+                }
+                else
+                {
+                    TempData["Success"] = "Updated";
                 }
 
                 return RedirectToAction("Index");

@@ -10,5 +10,9 @@ namespace RfidAccess.Web.Services.People
         Task<Result<PersonCombinedViewModel>> GetAllPeople();
 
         Task<Result<PersonCombinedViewModel>> GetPaginated(int skip, int take);
+
+        Task<Result> DeletePerson(int id);
+
+        Task<Result> ToggleWhiteListPerson(int id);
     }
 }

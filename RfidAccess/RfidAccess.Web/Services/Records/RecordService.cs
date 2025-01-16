@@ -61,6 +61,20 @@ namespace RfidAccess.Web.Services.Records
                 return Result.Failure("PERSON_INSERTED");
             }
 
+            if (person.IsWhitelisted)
+            {
+                Record r = new Record
+                {
+                    PersonId = person.Id,
+                    Code = code,
+                    Time = now
+                };
+
+                recordRepository.Create(r);
+                await recordRepository.SaveChanges();
+                return Result.Success;
+            }
+
             Result<TimeSlotViewModel> timeSlotvm = await scheduleService.GetTimeSlots();
             if (timeSlotvm.IsFailed || timeSlotvm.Value == null)
             {

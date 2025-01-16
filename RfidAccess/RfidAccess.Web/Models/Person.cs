@@ -1,7 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RfidAccess.Web.Models
 {
+    [Index(nameof(Code))]
     public class Person : BaseEntity
     {
         [MaxLength(100)]
@@ -14,6 +17,9 @@ namespace RfidAccess.Web.Models
         public string? Code { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        [DefaultValue(false)]
+        public bool IsWhitelisted { get; set; }
 
         public ICollection<Record> Records { get; set; } = [];
     }

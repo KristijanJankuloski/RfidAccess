@@ -26,6 +26,19 @@ namespace RfidAccess.Web.Services.People
             return Result.Success;
         }
 
+        public async Task<Result> DeletePerson(int id)
+        {
+            Person? person = await personRepository.GetById(id);
+            if (person == null)
+            {
+                return Result.Failure("Нема пронајден корисник.");
+            }
+
+            personRepository.Delete(person);
+            await personRepository.SaveChanges();
+            return Result.Success;
+        }
+
         public async Task<Result<PersonCombinedViewModel>> GetAllPeople()
         {
             List<Person> people = await personRepository.GetAll();
@@ -36,7 +49,8 @@ namespace RfidAccess.Web.Services.People
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 CreatedOn = x.CreatedOn,
-                Code = x.Code
+                Code = x.Code,
+                IsWhitelisted = x.IsWhitelisted
             }).ToList();
 
             List<PersonViewModel> buffer = personBuffer.People.Select(x => new PersonViewModel
@@ -45,7 +59,8 @@ namespace RfidAccess.Web.Services.People
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 CreatedOn = x.CreatedOn,
-                Code = x.Code
+                Code = x.Code,
+                IsWhitelisted = x.IsWhitelisted
             }).ToList();
 
             PersonCombinedViewModel combined = new PersonCombinedViewModel
@@ -68,7 +83,8 @@ namespace RfidAccess.Web.Services.People
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 CreatedOn = x.CreatedOn,
-                Code = x.Code
+                Code = x.Code,
+                IsWhitelisted = x.IsWhitelisted
             }).ToList();
 
             List<PersonViewModel> buffer = personBuffer.People.Select(x => new PersonViewModel
@@ -77,7 +93,8 @@ namespace RfidAccess.Web.Services.People
                 FirstName = x.FirstName,
                 LastName = x.LastName,
                 CreatedOn = x.CreatedOn,
-                Code = x.Code
+                Code = x.Code,
+                IsWhitelisted = x.IsWhitelisted
             }).ToList();
 
             PersonCombinedViewModel combined = new PersonCombinedViewModel
@@ -90,6 +107,20 @@ namespace RfidAccess.Web.Services.People
             };
 
             return new Result<PersonCombinedViewModel>(combined);
+        }
+
+        public async Task<Result> ToggleWhiteListPerson(int id)
+        {
+            Person? person = await personRepository.GetById(id);
+            if (person == null)
+            {
+                return Result.Failure("Нема пронајден корисник.");
+            }
+
+            person.IsWhitelisted = !person.IsWhitelisted;
+            personRepository.Update(person);
+            await personRepository.SaveChanges();
+            return Result.Success;
         }
     }
 }

@@ -36,7 +36,7 @@
         </tbody>
     </table>
 }
-@if(Model.People.Count > 0)
+@if (Model.People.Count > 0)
 {
     <table class="table table-striped">
         <thead>
@@ -44,6 +44,8 @@
                 <th>Име</th>
                 <th>Презиме</th>
                 <th>Шифра</th>
+                <th style="width:60px">VIP</th>
+                <th style="width:60px">Бришење</th>
             </tr>
         </thead>
         <tbody>
@@ -53,6 +55,19 @@
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
                     <td>@person.Code</td>
+                    <td>
+                        @if (person.IsWhitelisted)
+                        {
+                            <a href="@("/People/Edit/" + person.Id)" class="btn btn-sm btn-primary">vip</a>
+                        }
+                        else
+                        {
+                            <a href="@("/People/Edit/" + person.Id)" class="btn btn-sm btn-outline-primary">vip</a>
+                        }
+                    </td>
+                    <td>
+                        <a href="@("/People/Delete/" + person.Id)" class="btn btn-sm btn-danger">X</a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -73,7 +88,8 @@
             </li>
         </ul>
     </nav>
-} else
+}
+else
 {
     <div class="card">
         <div class="card-header">
