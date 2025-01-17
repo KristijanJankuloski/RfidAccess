@@ -12,7 +12,9 @@ namespace RfidAccess.Web.Controllers
         private readonly IExportService exportService = exportService;
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? page = 1)
+        public async Task<IActionResult> Index(
+            [FromQuery] int? page = 1,
+            [FromQuery] string? code = null)
         {
             try
             {
@@ -24,7 +26,7 @@ namespace RfidAccess.Web.Controllers
                     TempData["Error"] = "Недозволено пребарување";
                     return RedirectToAction("Index");
                 }
-                var result = await recordService.GetPaginatedRecords(skip, take);
+                var result = await recordService.GetPaginatedRecords(skip, take, code);
                 if (result.IsFailed)
                 {
                     TempData["Error"] = result.Message;

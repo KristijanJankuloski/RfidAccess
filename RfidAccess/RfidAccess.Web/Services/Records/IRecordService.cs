@@ -7,6 +7,6 @@ namespace RfidAccess.Web.Services.Records
     {
         Task<Result> InsertCode(string code);
 
-        Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take);
+        Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take, string? code);
     }
 }

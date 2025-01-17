@@ -9,6 +9,8 @@ using RfidAccess.Web.Helpers;
 using RfidAccess.Web.ViewModels.Records;
 using RfidAccess.Web.Services.HubService;
 using RfidAccess.Web.Hub;
+using RfidAccess.Web.DataAccess.Repositories.ErrorLogs;
+using Microsoft.EntityFrameworkCore;
 
 namespace RfidAccess.Web.Services.Records
 {
@@ -17,24 +19,42 @@ namespace RfidAccess.Web.Services.Records
         IRecordRepository recordRepository,
         IPersonRepository personRepository,
         IScheduleService scheduleService,
+        IErrorLogRepository errorLogRepository,
         IHubService hubService) : IRecordService
     {
         private readonly PersonBufferService personBuffer = personBuffer;
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IPersonRepository personRepository = personRepository;
         private readonly IScheduleService scheduleService = scheduleService;
+        private readonly IErrorLogRepository errorLogRepository = errorLogRepository;
         private readonly IHubService hubService = hubService;
 
-        public async Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take)
+        public async Task<Result<RecordsListViewModel>> GetPaginatedRecords(int skip, int take, string? code)
         {
-            int count = await recordRepository.Count();
-            List<Record> records = await recordRepository.GetRange(skip, take);
+            int count = 0;
+            List<Record> records = [];
 
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                count = await recordRepository.CountFiltered(query => query.Where(x => x.Code == code));
+                records = await recordRepository.Filter(query => query
+                .Include(x => x.Person)
+                .Where(x => x.Code == code)
+                .OrderByDescending(x => x.Id)
+                .Skip(skip)
+                .Take(take));
+            }
+            else
+            {
+                count = await recordRepository.Count();
+                records = await recordRepository.GetRange(skip, take);
+            }
             RecordsListViewModel model = new RecordsListViewModel
             {
                 Total = count,
                 Skip = skip,
                 Take = take,
+                Code = code,
                 Records = records.Select(x => new RecordViewModel
                 {
                     Id = x.Id,
@@ -51,7 +71,7 @@ namespace RfidAccess.Web.Services.Records
         public async Task<Result> InsertCode(string code)
         {
             DateTime now = DateTime.Now;
-            Person? person = (await personRepository.Filter(query => query.Where(x => x.Code == code))).FirstOrDefault();
+            Person? person = await personRepository.GetByCode(code);
             if (person == null)
             {
                 Person? personToInsert = personBuffer.People.FirstOrDefault();
@@ -64,6 +84,13 @@ namespace RfidAccess.Web.Services.Records
                         Date = now.ToString("HH:mm dd.MM.yyyy")
                     };
                     await hubService.SendNotification(dto);
+                    errorLogRepository.Create(new ErrorLog
+                    {
+                        Code = code,
+                        Message = dto.Message,
+                        CreatedOn = now
+                    });
+                    await errorLogRepository.SaveChanges();
                     return Result.Failure("CODE_NOT_FOUND");
                 }
 
@@ -99,6 +126,14 @@ namespace RfidAccess.Web.Services.Records
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };
                 await hubService.SendNotification(dto);
+                errorLogRepository.Create(new ErrorLog
+                {
+                    Code = code,
+                    Message = dto.Message,
+                    CreatedOn = now,
+                    PersonId = person.Id
+                });
+                await errorLogRepository.SaveChanges();
                 return Result.Failure("NOT_FOUND");
             }
 
@@ -112,6 +147,14 @@ namespace RfidAccess.Web.Services.Records
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };
                 await hubService.SendNotification(dto);
+                errorLogRepository.Create(new ErrorLog
+                {
+                    Code = code,
+                    Message = dto.Message,
+                    CreatedOn = now,
+                    PersonId = person.Id
+                });
+                await errorLogRepository.SaveChanges();
                 return Result.Failure("NO_ACTIVE_TIME_SLOT");
             }
 
@@ -129,6 +172,14 @@ namespace RfidAccess.Web.Services.Records
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };
                 await hubService.SendNotification(dto);
+                errorLogRepository.Create(new ErrorLog
+                {
+                    Code = code,
+                    Message = dto.Message,
+                    CreatedOn = now,
+                    PersonId = person.Id
+                });
+                await errorLogRepository.SaveChanges();
                 return Result.Failure("DENIED");
             }
 

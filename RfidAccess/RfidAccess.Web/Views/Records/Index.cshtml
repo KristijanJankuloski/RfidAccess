@@ -12,16 +12,26 @@
     }
 }
 @model RecordsListViewModel
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex justify-content-between align-items-center mb-2">
     <h1 class="display-5">@ViewData["Title"]</h1>
     <form method="get" asp-action="Export">
         <div class="d-flex align-items-center">
             Од <input type="date" id="start-date" name="Start" class="form-control mx-2" placeholder="Почеток"/>
             До <input type="date" id="end-date" name="End" class="form-control mx-2" placeholder="Крај"/>
-            <button class="btn btn-primary" type="submit">Експорт</button>
+            <button class="btn btn-outline-primary" type="submit">Извештај</button>
         </div>
     </form>
 </div>
+<form method="get" asp-action="Index">
+    <div class="row mb-3">
+        <div class="col-lg-3">
+            <input type="text" name="code" class="form-control" value="@Model.Code" placeholder="Број на картичка" />
+        </div>
+        <div class="col-lg-3">
+            <button type="submit" class="btn btn-primary">Пребарај</button>
+        </div>
+    </div>
+</form>
 @if (Model.Records.Count > 0)
 {
     <table class="table table-striped">
@@ -29,8 +39,8 @@
             <tr>
                 <th>Име</th>
                 <th>Презиме</th>
-                <th>Шифра</th>
-                <th>Време</th>
+                <th>Број на картичка</th>
+                <th style="width: 15rem;">Време</th>
             </tr>
         </thead>
         <tbody>
@@ -48,16 +58,16 @@
     <nav>
         <ul class="pagination justify-content-center">
             <li class="page-item @(currentPage == 1 ? "disabled" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@(Math.Max(1, (currentPage - 1)))">Предходно</a>
+                <a class="page-link" asp-action="Index" asp-route-page="@(Math.Max(1, (currentPage - 1)))" asp-route-code="@Model.Code">&#60;&#60;</a>
             </li>
             @for (int i = startPage; i <= endPage; i++)
             {
                 <li class="page-item @(i == currentPage ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(Math.Max(1, i))">@i</a>
+                    <a class="page-link" asp-action="Index" asp-route-page="@(Math.Max(1, i))" asp-route-code="@Model.Code">@i</a>
                 </li>
             }
             <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
-                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)">Следно</a>
+                <a class="page-link" asp-action="Index" asp-route-page="@(currentPage + 1)" asp-route-code="@Model.Code">&#62;&#62;</a>
             </li>
         </ul>
     </nav>

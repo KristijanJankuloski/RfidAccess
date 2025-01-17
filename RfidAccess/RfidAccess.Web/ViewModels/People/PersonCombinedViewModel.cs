@@ -11,5 +11,11 @@
         public int? Total { get; set; } = 0;
 
         public int? Take { get; set; } = 10;
+
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+
+        public string? Code { get; set; }
     }
 }

@@ -13,6 +13,11 @@ namespace RfidAccess.Web.DataAccess.Repositories.Base
             return await context.Set<T>().CountAsync();
         }
 
+        public async Task<int> CountFiltered(Func<IQueryable<T>, IQueryable<T>> func)
+        {
+            return await func(context.Set<T>()).CountAsync();
+        }
+
         public void Create(T entity)
         {
             context.Set<T>().Add(entity);

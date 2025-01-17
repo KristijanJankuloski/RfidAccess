@@ -9,6 +9,8 @@
         public int? Take { get; set; } = 10;
 
         public List<RecordViewModel> Records { get; set; } = [];
+
+        public string? Code { get; set; }
     }
 
     public class RecordViewModel

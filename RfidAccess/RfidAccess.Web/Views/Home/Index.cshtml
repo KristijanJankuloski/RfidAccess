@@ -41,6 +41,8 @@
 <script>
     const startTime = Date.parse(`@(Model?.Active?.Start.ToString("yyyy-MM-ddTHH:mm:ss.fff"))`);
     const endTime = Date.parse(`@(Model?.Active?.End.ToString("yyyy-MM-ddTHH:mm:ss.fff"))`);
+    const weekDays = ["Нед", "Пон", "Вто", "Сре", "Чет", "Пет", "Саб"];
+    const months = ["јан", "фев", "март", "апр", "мај", "јун", "јул", "авг", "сеп", "окт", "ное", "дек"];
     const progressBar = document.getElementById('progress-bar');
     if (progressBar) {
         progressBar.setAttribute('aria-valuemin', startTime);
@@ -73,7 +75,7 @@
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const seconds = now.getSeconds().toString().padStart(2, '0');
 
-        const timeString = `${now.toDateString()} ${hours}:${minutes}:${seconds}`;
+        const timeString = `${weekDays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} ${hours}:${minutes}:${seconds}`;
 
         clockElement.textContent = timeString;
     }

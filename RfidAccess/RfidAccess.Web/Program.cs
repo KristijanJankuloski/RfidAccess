@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using RfidAccess.Web.Hub;
 using RfidAccess.Web.Services.HubService;
+using RfidAccess.Web.DataAccess.Repositories.ErrorLogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddTransient<IPersonRepository, PersonRepository>();
 builder.Services.AddTransient<IRecordRepository, RecordRepository>();
 builder.Services.AddTransient<IWeekTimeSlotsRepository, WeekTimeSlotsRepository>();
+builder.Services.AddTransient<IErrorLogRepository, ErrorLogRepository>();
 builder.Services.AddTransient<IHubService, HubService>();
 
 builder.Services.AddScoped<IRecordService, RecordService>();

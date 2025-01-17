@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using RfidAccess.Web.DataAccess.Repositories.ErrorLogs;
 using RfidAccess.Web.DataAccess.Repositories.Records;
 using RfidAccess.Web.Helpers;
 using RfidAccess.Web.Models;
@@ -10,10 +11,14 @@ using System.Drawing;
 
 namespace RfidAccess.Web.Services.Export
 {
-    public class ExportService(IRecordRepository recordRepository, IScheduleService scheduleService) : IExportService
+    public class ExportService(
+        IRecordRepository recordRepository,
+        IScheduleService scheduleService,
+        IErrorLogRepository errorLogRepository) : IExportService
     {
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IScheduleService scheduleService = scheduleService;
+        private readonly IErrorLogRepository errorLogRepository = errorLogRepository;
 
         public async Task<Result<byte[]>> ExportRecords(DateTime startDate, DateTime endDate)
         {
@@ -70,6 +75,23 @@ namespace RfidAccess.Web.Services.Export
                     personSheet.Cells[i + 2, 2].Value = firstRecord?.Person?.LastName ?? string.Empty;
                     personSheet.Cells[i + 2, 3].Value = firstRecord?.Code ?? string.Empty;
                     personSheet.Cells[i + 2, 4].Value = groupCount;
+                }
+
+                List<ErrorLog> errorLogs = await errorLogRepository.GetFromDates(startDate, endDate);
+                if (errorLogs.Count > 0)
+                {
+                    var errorSheet = package.Workbook.Worksheets.Add("Недозволен влез");
+                    errorSheet.Cells[1, 1].Value = "Порака";
+                    errorSheet.Cells[1, 2].Value = "Шифра";
+                    errorSheet.Cells[1, 3].Value = "Дата";
+                    errorSheet.Cells[1, 4].Value = "Време";
+                    for (int i = 0; i < errorLogs.Count; i++)
+                    {
+                        errorSheet.Cells[i + 2, 1].Value = errorLogs[i].Message;
+                        errorSheet.Cells[i + 2, 2].Value = errorLogs[i].Code;
+                        errorSheet.Cells[i + 2, 3].Value = errorLogs[i].CreatedOn.ToString("dd.MM.yyyy");
+                        errorSheet.Cells[i + 2, 4].Value = errorLogs[i].CreatedOn.ToString("HH:mm");
+                    }
                 }
 
                 TimeSlotViewModel? vm = (await scheduleService.GetTimeSlots()).Value;

@@ -12,6 +12,8 @@
 
         public DbSet<WeekTimeSlots> WeekTimeSlots { get; set; }
 
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
+
         public RfidContext(DbContextOptions<RfidContext> options)
             : base(options)
         {

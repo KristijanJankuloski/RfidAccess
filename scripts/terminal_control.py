@@ -7,9 +7,9 @@ import json
 GPIO.setmode(GPIO.BCM)
 
 relay_pins = {
-    'relay1': 17,  # GPIO17
-    'relay2': 27,  # GPIO27
-    'relay3': 22   # GPIO22
+    'door': 17,  # GPIO17
+    'siren': 27,  # GPIO27
+    'light': 22   # GPIO22
 }
 
 for pin in relay_pins.values():
@@ -37,11 +37,11 @@ def main():
                 response = requests.post(url, data=json.dumps({'value': user_input}), headers={'Content-Type': 'application/json'})
                 
                 if response.status_code == 200:
-                    press_button(relay_pins['relay1'], 0.5)
+                    press_button(relay_pins['door'], 1)
                 elif response.status_code == 400:
-                    press_button(relay_pins['relay2'], 1)
+                    press_button(relay_pins['siren'], 1)
                 elif response.status_code == 201:
-                    press_button(relay_pins['relay3'], 0.5)
+                    press_button(relay_pins['light'], 0.5)
                 else:
                     print(f"Unexpected response code: {response.status_code}")
             except requests.exceptions.ConnectionError:

@@ -11,7 +11,11 @@ namespace RfidAccess.Web.Controllers
     {
         private readonly IPersonService personService = personService;
 
-        public async Task<IActionResult> Index([FromQuery] int? page = 1)
+        public async Task<IActionResult> Index(
+            [FromQuery] int? page = 1,
+            [FromQuery] string? firstName = null,
+            [FromQuery] string? lastName = null,
+            [FromQuery] string? code = null)
         {
             try
             {
@@ -23,7 +27,7 @@ namespace RfidAccess.Web.Controllers
                     TempData["Error"] = "Недозволено пребарување";
                     return RedirectToAction("Index");
                 }
-                var result = await personService.GetPaginated(skip, take);
+                var result = await personService.GetPaginated(skip, take, firstName, lastName, code);
                 if (result.IsFailed)
                 {
                     TempData["Error"] = result.Message;

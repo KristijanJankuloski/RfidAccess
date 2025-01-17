@@ -17,8 +17,8 @@ namespace RfidAccess.Web.Services.People
         {
             Person person = new Person()
             {
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
+                FirstName = viewModel.FirstName.Trim(),
+                LastName = viewModel.LastName.Trim(),
                 CreatedOn = DateTime.Now
             };
 
@@ -72,10 +72,23 @@ namespace RfidAccess.Web.Services.People
             return new Result<PersonCombinedViewModel>(combined);
         }
 
-        public async Task<Result<PersonCombinedViewModel>> GetPaginated(int skip, int take)
+        public async Task<Result<PersonCombinedViewModel>> GetPaginated(int skip, int take, string? firstName, string? lastName, string? code)
         {
-            int count = await personRepository.Count();
-            List<Person> people = await personRepository.GetRange(skip, take);
+            int count = 0;
+            List<Person> people = [];
+
+            if (!string.IsNullOrWhiteSpace(firstName)
+                || !string.IsNullOrWhiteSpace(lastName)
+                || !string.IsNullOrWhiteSpace(code))
+            {
+                count = await personRepository.CountFilter(firstName, lastName, code);
+                people = await personRepository.GetFiltered(firstName, lastName, code, skip, take);
+            }
+            else
+            {
+                count = await personRepository.Count();
+                people = await personRepository.GetRange(skip, take);
+            }
 
             List<PersonViewModel> response = people.Select(x => new PersonViewModel
             {
@@ -103,7 +116,10 @@ namespace RfidAccess.Web.Services.People
                 People = response,
                 Total = count,
                 Skip = skip,
-                Take = take
+                Take = take,
+                FirstName = firstName,
+                LastName = lastName,
+                Code = code
             };
 
             return new Result<PersonCombinedViewModel>(combined);

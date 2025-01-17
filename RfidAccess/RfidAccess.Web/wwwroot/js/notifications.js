@@ -12,7 +12,7 @@ connection.on("Notification", (message) => {
                 <thead>
                     <tr>
                         <th>Име</th>
-                        <th>Шифра</th>
+                        <th>Број на картичка</th>
                         <th style="width: 15rem;">Време</th>
                     </tr>
                 </thead>

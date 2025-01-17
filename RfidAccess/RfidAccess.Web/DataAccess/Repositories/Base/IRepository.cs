@@ -8,6 +8,8 @@
 
         Task<int> Count();
 
+        Task<int> CountFiltered(Func<IQueryable<T>, IQueryable<T>> func);
+
         Task<List<T>> GetRange(int skip, int take);
 
         Task<T?> GetById(int id);
