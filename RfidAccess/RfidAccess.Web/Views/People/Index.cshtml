@@ -27,8 +27,8 @@
             <input type="text" class="form-control" name="code" placeholder="Број на картичка" value="@(Model.Code ?? string.Empty)" />
         </div>
         <div class="col-lg">
-            <button type="submit" class="btn btn-primary me-2">Пребарај</button>
-            <a class="btn btn-success" asp-area="" asp-controller="People" asp-action="Create"><img class="img-fluid" width="22px" src="~/img/icons/user-plus.svg" /> Нов корисник</a>
+            <button type="submit" class="btn btn-primary me-2"><img class="img-fluid" width="20px" src="~/img/icons/search.svg" /></button>
+            <a class="btn btn-success" asp-area="" asp-controller="People" asp-action="Create"><img class="img-fluid" width="20px" src="~/img/icons/user-plus.svg" /> Нов корисник</a>
         </div>
     </div>
 </form>
@@ -70,7 +70,7 @@
                 <tr>
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
-                    <td>@person.Code</td>
+                    <td><a class="btn btn-link" asp-area="" asp-controller="Records" asp-action="Index" asp-route-code="@person.Code">@person.Code</a></td>
                     <td>
                         @if (person.IsWhitelisted)
                         {

@@ -121,7 +121,7 @@ namespace RfidAccess.Web.Services.Records
             {
                 NotificationDto dto = new NotificationDto
                 {
-                    Message = $"{person.FirstName} {person.LastName} - Надвор од време",
+                    Message = $"{person.FirstName} {person.LastName} - Нема пронајден термин",
                     Code = code,
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };
@@ -142,7 +142,7 @@ namespace RfidAccess.Web.Services.Records
             {
                 NotificationDto dto = new NotificationDto
                 {
-                    Message = $"{person.FirstName} {person.LastName} - Надвор од време",
+                    Message = $"{person.FirstName} {person.LastName} - Погрешен термин",
                     Code = code,
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };
@@ -167,7 +167,7 @@ namespace RfidAccess.Web.Services.Records
             {
                 NotificationDto dto = new NotificationDto
                 {
-                    Message = $"{person.FirstName} {person.LastName} - Веќе влезен",
+                    Message = $"{person.FirstName} {person.LastName} - Веќе искористен",
                     Code = code,
                     Date = now.ToString("HH:mm dd.MM.yyyy")
                 };

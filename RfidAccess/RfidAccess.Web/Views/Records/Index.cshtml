@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Лог";
+    ViewData["Title"] = "Извештаи";
     int currentPage = (Model.Skip ?? 0) / (Model.Take ?? 10) + 1;
     int totalPages = (int)Math.Ceiling((double)(Model.Total ?? 0) / (Model.Take ?? 10));
     int pageRange = 5;
@@ -18,7 +18,7 @@
         <div class="d-flex align-items-center">
             Од <input type="date" id="start-date" name="Start" class="form-control mx-2" placeholder="Почеток"/>
             До <input type="date" id="end-date" name="End" class="form-control mx-2" placeholder="Крај"/>
-            <button class="btn btn-outline-primary" type="submit">Извештај</button>
+            <button class="btn btn-outline-primary" type="submit">Превземи</button>
         </div>
     </form>
 </div>
@@ -28,7 +28,7 @@
             <input type="text" name="code" class="form-control" value="@Model.Code" placeholder="Број на картичка" />
         </div>
         <div class="col-lg-3">
-            <button type="submit" class="btn btn-primary">Пребарај</button>
+            <button type="submit" class="btn btn-primary"><img class="img-fluid" width="20px" src="~/img/icons/search.svg" /></button>
         </div>
     </div>
 </form>

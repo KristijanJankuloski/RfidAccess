@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 using RfidAccess.Web.Hub;
 using RfidAccess.Web.Services.HubService;
 using RfidAccess.Web.DataAccess.Repositories.ErrorLogs;
+using RfidAccess.Web.Services.ErrorLogs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddScoped<IRecordService, RecordService>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<IExportService, ExportService>();
+builder.Services.AddScoped<IErrorLogService, ErrorLogService>();
 
 builder.Services.AddSingleton(new PersonBufferService());
 

@@ -11,6 +11,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VA - @ViewData["Title"]</title>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/toastr.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -34,7 +35,10 @@
                                 <a class="nav-link text-dark border-end" asp-area="" asp-controller="Schedule" asp-action="Index"><img class="img-fluid" width="25px" src="~/img/icons/calendar.svg" /> Распоред</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark border-end" asp-area="" asp-controller="Records" asp-action="Index"><img class="img-fluid" width="25px" src="~/img/icons/documents.svg" /> Лог</a>
+                                <a class="nav-link text-dark border-end" asp-area="" asp-controller="Records" asp-action="Index"><img class="img-fluid" width="25px" src="~/img/icons/documents.svg" /> Извештаи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark border-end" asp-area="" asp-controller="ErrorLogs" asp-action="Index"><img class="img-fluid" width="25px" src="~/img/icons/shield-warning.svg" /> Лог</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark border-end" asp-area="" asp-controller="People" asp-action="Index"><img class="img-fluid" width="25px" src="~/img/icons/user.svg" /> Корисници</a>
