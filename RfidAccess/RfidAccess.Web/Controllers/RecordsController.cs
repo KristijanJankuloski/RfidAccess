@@ -55,7 +55,8 @@ namespace RfidAccess.Web.Controllers
                 }
 
                 string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                string fileName = "оброци_лог.xlsx";
+                string date = DateTime.Now.ToString("dd_MM_yyyy");
+                string fileName = $"оброци_извештај_{date}.xlsx";
                 return File(result.Value, contentType, fileName);
             }
             catch (Exception ex)

@@ -16,8 +16,8 @@
     <h1 class="display-5">@ViewData["Title"]</h1>
     <form method="get" asp-action="Export">
         <div class="d-flex align-items-center">
-            Од <input type="date" id="start-date" name="Start" class="form-control mx-2" placeholder="Почеток"/>
-            До <input type="date" id="end-date" name="End" class="form-control mx-2" placeholder="Крај"/>
+            Од <input type="date" id="start-date" name="Start" class="form-control mx-2" placeholder="Почеток" required/>
+            До <input type="date" id="end-date" name="End" class="form-control mx-2" placeholder="Крај" required/>
             <button class="btn btn-outline-primary" type="submit">Превземи</button>
         </div>
     </form>

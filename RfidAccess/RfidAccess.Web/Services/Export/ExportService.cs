@@ -31,9 +31,9 @@ namespace RfidAccess.Web.Services.Export
             }
 
             TimeSpan timeDelta = endDate - startDate;
-            if (timeDelta.TotalDays > 90)
+            if (timeDelta.TotalDays > 366)
             {
-                return new Result<byte[]>("Одбраниот период е многу голем");
+                return new Result<byte[]>("Одбраниот период не смее да е поголем од 1 година");
             }
 
             List<Record> records = await recordRepository.GetFromDates(startDate, endDate);
@@ -120,6 +120,15 @@ namespace RfidAccess.Web.Services.Export
                 TimeSlotViewModel? vm = (await scheduleService.GetTimeSlots()).Value;
                 if (vm == null)
                 {
+                    using var streamBase = new MemoryStream();
+                    package.SaveAs(streamBase);
+
+                    return new Result<byte[]>(streamBase.ToArray());
+                }
+
+                if(timeDelta.TotalDays > 32)
+                {
+                    await hubService.SendWarning("Периоди поголеми од 1 месец нема да имаат поделба по оброк.");
                     using var streamBase = new MemoryStream();
                     package.SaveAs(streamBase);
 
