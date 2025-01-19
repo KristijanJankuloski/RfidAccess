@@ -39,6 +39,7 @@
             <tr>
                 <th>Име</th>
                 <th>Презиме</th>
+                <th style="width:60px">Бришење</th>
             </tr>
         </thead>
         <tbody>
@@ -47,6 +48,11 @@
                 <tr class="bg-warning">
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
+                    <td>
+                        <a href="@("People/DeleteBuffered?firstName=" + person.FirstName + "&lastName=" + person.LastName)" class="btn btn-sm btn-danger">
+                            <img class="img-fluid" width="18px" src="~/img/icons/trash.svg" />
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -82,7 +88,9 @@
                         }
                     </td>
                     <td>
-                        <a href="@("/People/Delete/" + person.Id)" class="btn btn-sm btn-danger"><img class="img-fluid" width="18px" src="~/img/icons/trash.svg" /></a>
+                        <a href="@("/People/Delete/" + person.Id)" class="btn btn-sm btn-danger">
+                            <img class="img-fluid" width="18px" src="~/img/icons/trash.svg" />
+                        </a>
                     </td>
                 </tr>
             }

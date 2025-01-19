@@ -26,6 +26,15 @@ namespace RfidAccess.Web.Services.People
             return Result.Success;
         }
 
+        public void DeleteFromBuffer(string? firstName, string? lastName)
+        {
+            Person? person = personBuffer.People.FirstOrDefault(x => x.FirstName == firstName && x.LastName == lastName);
+            if (person != null)
+            {
+                personBuffer.People.Remove(person);
+            }
+        }
+
         public async Task<Result> DeletePerson(int id)
         {
             Person? person = await personRepository.GetById(id);

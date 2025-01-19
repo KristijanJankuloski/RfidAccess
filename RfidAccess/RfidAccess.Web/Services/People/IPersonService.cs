@@ -14,5 +14,7 @@ namespace RfidAccess.Web.Services.People
         Task<Result> DeletePerson(int id);
 
         Task<Result> ToggleWhiteListPerson(int id);
+
+        void DeleteFromBuffer(string? firstName, string? lastName);
     }
 }

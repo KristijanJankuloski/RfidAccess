@@ -106,7 +106,7 @@ namespace RfidAccess.Web.Controllers
                 }
                 else
                 {
-                    TempData["Success"] = "Updated";
+                    TempData["Success"] = "Променет корисник";
                 }
 
                 return RedirectToAction("Index");
@@ -116,6 +116,14 @@ namespace RfidAccess.Web.Controllers
                 TempData["Error"] = ex.Message;
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        public IActionResult DeleteBuffered(
+            [FromQuery] string? firstName,
+            [FromQuery] string? lastName)
+        {
+            personService.DeleteFromBuffer(firstName, lastName);
+            return RedirectToAction("Index");
         }
     }
 }
