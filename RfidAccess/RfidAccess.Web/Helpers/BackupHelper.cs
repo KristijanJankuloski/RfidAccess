@@ -1,4 +1,5 @@
 ﻿using RfidAccess.Web.ViewModels.Base;
+using System.Runtime.InteropServices;
 
 namespace RfidAccess.Web.Helpers
 {
@@ -8,31 +9,44 @@ namespace RfidAccess.Web.Helpers
         {
             return await Task.Run(() =>
             {
-                DriveInfo[] drives = DriveInfo.GetDrives();
+                DriveInfo[] drives = GetRemovableDrives();
 
                 foreach (var drive in drives)
                 {
-                    if (drive.IsReady && drive.DriveType == DriveType.Removable)
+                    long availableSpace = drive.AvailableFreeSpace;
+                    long databaseSize = new FileInfo(databasePath).Length;
+
+                    if (availableSpace > databaseSize)
                     {
-                        long availableSpace = drive.AvailableFreeSpace;
-                        long databaseSize = new FileInfo(databasePath).Length;
+                        string backupPath = Path.Combine(drive.RootDirectory.FullName, backupFileName);
 
-                        if (availableSpace > databaseSize)
-                        {
-                            string backupPath = Path.Combine(drive.RootDirectory.FullName, backupFileName);
-
-                            File.Copy(databasePath, backupPath, true);
-                            return Result.Success;
-                        }
-                        else
-                        {
-                            return Result.Failure("Not enough space on the USB drive.");
-                        }
+                        File.Copy(databasePath, backupPath, true);
+                        return Result.Success;
+                    }
+                    else
+                    {
+                        return Result.Failure("Not enough space on the USB drive.");
                     }
                 }
 
                 return Result.Failure("No suitable USB drive found.");
             });
+        }
+
+        private static DriveInfo[] GetRemovableDrives()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return DriveInfo.GetDrives().Where(d => d.IsReady && d.DriveType == DriveType.Removable).ToArray();
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                // On Linux, check typical mount points for USB drives
+                var drives = DriveInfo.GetDrives().Where(d => d.IsReady && d.RootDirectory.FullName.StartsWith("/media")).ToArray();
+                return drives;
+            }
+
+            return Array.Empty<DriveInfo>();
         }
     }
 }
