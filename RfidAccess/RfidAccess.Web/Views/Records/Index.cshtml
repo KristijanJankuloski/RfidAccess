@@ -47,8 +47,8 @@
             @foreach (var record in Model.Records)
             {
                 <tr>
-                    <td>@record.FirstName</td>
-                    <td>@record.LastName</td>
+                    <td>@(record.FirstName ?? "Избришан")</td>
+                    <td>@(record.LastName ?? "Корисник")</td>
                     <td>@record.Code</td>
                     <td>@record.Time.ToString("HH:mm dd.MM.yyyy")</td>
                 </tr>

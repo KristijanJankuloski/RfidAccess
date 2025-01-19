@@ -22,9 +22,18 @@
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            
+            builder.Entity<Record>()
+                .HasOne(r => r.Person)
+                .WithMany(r => r.Records)
+                .HasForeignKey(r => r.PersonId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<ErrorLog>()
+                .HasOne(x => x.Person)
+                .WithMany()
+                .HasForeignKey(x => x.PersonId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

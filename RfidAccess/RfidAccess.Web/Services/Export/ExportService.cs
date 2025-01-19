@@ -4,6 +4,7 @@ using RfidAccess.Web.DataAccess.Repositories.ErrorLogs;
 using RfidAccess.Web.DataAccess.Repositories.Records;
 using RfidAccess.Web.Helpers;
 using RfidAccess.Web.Models;
+using RfidAccess.Web.Services.HubService;
 using RfidAccess.Web.Services.Schedules;
 using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.Schedule;
@@ -14,18 +15,31 @@ namespace RfidAccess.Web.Services.Export
     public class ExportService(
         IRecordRepository recordRepository,
         IScheduleService scheduleService,
-        IErrorLogRepository errorLogRepository) : IExportService
+        IErrorLogRepository errorLogRepository,
+        IHubService hubService) : IExportService
     {
         private readonly IRecordRepository recordRepository = recordRepository;
         private readonly IScheduleService scheduleService = scheduleService;
         private readonly IErrorLogRepository errorLogRepository = errorLogRepository;
+        private readonly IHubService hubService = hubService;
 
         public async Task<Result<byte[]>> ExportRecords(DateTime startDate, DateTime endDate)
         {
+            if (startDate >= endDate)
+            {
+                return new Result<byte[]>("Невалидни дати");
+            }
+
+            TimeSpan timeDelta = endDate - startDate;
+            if (timeDelta.TotalDays > 90)
+            {
+                return new Result<byte[]>("Одбраниот период е многу голем");
+            }
+
             List<Record> records = await recordRepository.GetFromDates(startDate, endDate);
             if (records.Count == 0)
             {
-                return new Result<byte[]>("No records");
+                return new Result<byte[]>("Нема записи");
             }
 
             using (var package = new ExcelPackage())
@@ -45,6 +59,9 @@ namespace RfidAccess.Web.Services.Export
                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
                     range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                 }
+                worksheet.Cells[1, 7].Style.Font.Bold = true;
+                worksheet.Cells[1, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[1, 7].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 for (int i = 0; i < records.Count; i++)
                 {
@@ -85,6 +102,12 @@ namespace RfidAccess.Web.Services.Export
                     errorSheet.Cells[1, 2].Value = "Шифра";
                     errorSheet.Cells[1, 3].Value = "Дата";
                     errorSheet.Cells[1, 4].Value = "Време";
+                    using (var range = errorSheet.Cells[1, 1, 1, 4])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    }
                     for (int i = 0; i < errorLogs.Count; i++)
                     {
                         errorSheet.Cells[i + 2, 1].Value = errorLogs[i].Message;
@@ -101,6 +124,11 @@ namespace RfidAccess.Web.Services.Export
                     package.SaveAs(streamBase);
 
                     return new Result<byte[]>(streamBase.ToArray());
+                }
+
+                if(vm.LastModified.HasValue && startDate <= vm.LastModified)
+                {
+                    await hubService.SendWarning("Распоредот се има сменето по одберената почетна дата! Поделбата ќе биде според новиот распоред.");
                 }
 
                 DateTime tempDate = startDate;

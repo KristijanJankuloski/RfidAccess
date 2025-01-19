@@ -4,6 +4,7 @@ using RfidAccess.Web.Helpers;
 using RfidAccess.Web.Models;
 using RfidAccess.Web.ViewModels.Base;
 using RfidAccess.Web.ViewModels.Schedule;
+using System.Net.NetworkInformation;
 
 namespace RfidAccess.Web.Services.Schedules
 {
@@ -64,13 +65,25 @@ namespace RfidAccess.Web.Services.Schedules
                 Thursday = ParseTimeSlots(weekTimeSlots.Thursday),
                 Friday = ParseTimeSlots(weekTimeSlots.Friday),
                 Saturday = ParseTimeSlots(weekTimeSlots.Saturday),
-                Sunday = ParseTimeSlots(weekTimeSlots.Sunday)
+                Sunday = ParseTimeSlots(weekTimeSlots.Sunday),
+                LastModified = weekTimeSlots.LastModified
             };
             return new Result<TimeSlotViewModel>(timeSlotViewModel);
         }
 
         public async Task<Result> UpdateTimeSlots(TimeSlotViewModel viewModel)
         {
+            if (ValidateSlotsInDay(viewModel.Monday)
+                || ValidateSlotsInDay(viewModel.Tuesday)
+                || ValidateSlotsInDay(viewModel.Wednesday)
+                || ValidateSlotsInDay(viewModel.Thursday)
+                || ValidateSlotsInDay(viewModel.Friday)
+                || ValidateSlotsInDay(viewModel.Saturday)
+                || ValidateSlotsInDay(viewModel.Sunday))
+            {
+                return Result.Failure("Невалидно време");
+            }
+
             string monday = JsonConvert.SerializeObject(viewModel.Monday);
             string tuesday = JsonConvert.SerializeObject(viewModel.Tuesday);
             string wednesday = JsonConvert.SerializeObject(viewModel.Wednesday);
@@ -89,6 +102,7 @@ namespace RfidAccess.Web.Services.Schedules
                 existingSlots.Friday = friday;
                 existingSlots.Saturday = saturday;
                 existingSlots.Sunday = sunday;
+                existingSlots.LastModified = DateTime.Now;
 
                 weekTimeSlotsRepository.Update(existingSlots);
                 await weekTimeSlotsRepository.SaveChanges();
@@ -103,7 +117,8 @@ namespace RfidAccess.Web.Services.Schedules
                 Thursday = thursday,
                 Friday = friday,
                 Saturday = saturday,
-                Sunday = sunday
+                Sunday = sunday,
+                LastModified = DateTime.Now
             };
             weekTimeSlotsRepository.Create(newSlots);
             await weekTimeSlotsRepository.SaveChanges();
@@ -131,6 +146,27 @@ namespace RfidAccess.Web.Services.Schedules
             {
                 return new List<TimeSlot>();
             }
+        }
+
+        private bool InvalidTimeSpan(string start, string end)
+        {
+            TimeSpan startTime = TimeSpan.Parse(start);
+            TimeSpan endTime = TimeSpan.Parse(end);
+
+            return endTime <= startTime;
+        }
+
+        private bool ValidateSlotsInDay(List<TimeSlot> slots)
+        {
+            foreach (var slot in slots)
+            {
+                if (InvalidTimeSpan(slot.Start, slot.End))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

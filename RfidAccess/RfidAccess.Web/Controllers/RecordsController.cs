@@ -50,7 +50,7 @@ namespace RfidAccess.Web.Controllers
                 var result = await exportService.ExportRecords(start, end);
                 if (result.IsFailed || result.Value == null)
                 {
-                    TempData["Error"] = "Непронајдени резултати";
+                    TempData["Error"] = result.Message;
                     return RedirectToAction("Index");
                 }
 

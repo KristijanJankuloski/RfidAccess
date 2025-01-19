@@ -60,7 +60,7 @@ namespace RfidAccess.Web.Controllers
                 }
                 else
                 {
-                    TempData["Success"] = "Created";
+                    TempData["Success"] = "Креиран корисник";
                 }
 
                 return RedirectToAction("Index");
@@ -83,7 +83,7 @@ namespace RfidAccess.Web.Controllers
                 }
                 else
                 {
-                    TempData["Success"] = "Deleted";
+                    TempData["Success"] = "Избришан корисник";
                 }
 
                 return RedirectToAction("Index");

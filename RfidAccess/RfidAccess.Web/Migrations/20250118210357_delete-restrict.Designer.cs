@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RfidAccess.Web.DataAccess.Context;
 
@@ -10,9 +11,11 @@ using RfidAccess.Web.DataAccess.Context;
 namespace RfidAccess.Web.Migrations
 {
     [DbContext(typeof(RfidContext))]
-    partial class RfidContextModelSnapshot : ModelSnapshot
+    [Migration("20250118210357_delete-restrict")]
+    partial class deleterestrict
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -309,9 +312,6 @@ namespace RfidAccess.Web.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Monday")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -397,7 +397,7 @@ namespace RfidAccess.Web.Migrations
                     b.HasOne("RfidAccess.Web.Models.Person", "Person")
                         .WithMany()
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Person");
                 });
@@ -407,7 +407,7 @@ namespace RfidAccess.Web.Migrations
                     b.HasOne("RfidAccess.Web.Models.Person", "Person")
                         .WithMany("Records")
                         .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Person");
                 });

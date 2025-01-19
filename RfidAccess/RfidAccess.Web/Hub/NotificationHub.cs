@@ -16,5 +16,9 @@ namespace RfidAccess.Web.Hub
         public static readonly string Notification = "Notification";
 
         public static readonly string Confirmation = "Confirmation";
+
+        public static readonly string Error = "Error";
+
+        public static readonly string Warning = "Warning";
     }
 }

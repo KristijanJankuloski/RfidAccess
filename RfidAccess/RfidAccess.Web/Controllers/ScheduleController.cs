@@ -38,7 +38,7 @@ namespace RfidAccess.Web.Controllers
                 {
                     TempData["Error"] = result.Message;
                 }
-                TempData["Success"] = "Updated";
+                TempData["Success"] = "Распоред ажуриран";
             }
             catch (Exception ex)
             {

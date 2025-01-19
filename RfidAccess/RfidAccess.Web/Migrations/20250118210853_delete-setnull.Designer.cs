@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RfidAccess.Web.DataAccess.Context;
 
@@ -10,9 +11,11 @@ using RfidAccess.Web.DataAccess.Context;
 namespace RfidAccess.Web.Migrations
 {
     [DbContext(typeof(RfidContext))]
-    partial class RfidContextModelSnapshot : ModelSnapshot
+    [Migration("20250118210853_delete-setnull")]
+    partial class deletesetnull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -307,9 +310,6 @@ namespace RfidAccess.Web.Migrations
 
                     b.Property<string>("Friday")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Monday")

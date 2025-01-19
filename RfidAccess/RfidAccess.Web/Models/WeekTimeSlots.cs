@@ -15,5 +15,7 @@
         public string Saturday { get; set; }
 
         public string Sunday { get; set; }
+
+        public DateTime? LastModified { get; set; }
     }
 }

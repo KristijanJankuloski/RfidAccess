@@ -58,8 +58,8 @@ namespace RfidAccess.Web.Services.Records
                 Records = records.Select(x => new RecordViewModel
                 {
                     Id = x.Id,
-                    FirstName = x.Person?.FirstName ?? string.Empty,
-                    LastName = x.Person?.LastName ?? string.Empty,
+                    FirstName = x.Person?.FirstName,
+                    LastName = x.Person?.LastName,
                     Code = x.Code,
                     Time = x.Time
                 }).ToList()
@@ -100,6 +100,12 @@ namespace RfidAccess.Web.Services.Records
                 personBuffer.People.Remove(personToInsert);
                 await hubService.SendConfirmation(code);
                 return Result.Failure("PERSON_INSERTED");
+            }
+
+            if (personBuffer.People.Count > 0)
+            {
+                await hubService.SendError(code, $"Корисник со картичката веќе постои: {person.FirstName} {person.LastName}");
+                return Result.Failure("INSERT_FAILED");
             }
 
             if (person.IsWhitelisted)

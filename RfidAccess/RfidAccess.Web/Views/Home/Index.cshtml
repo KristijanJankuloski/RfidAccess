@@ -36,8 +36,8 @@
 </div>
 <div id="notification-card-wrapper" class="mt-3"></div>
 
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/notifications.js"></script>
+@* <script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/notifications.js"></script> *@
 <script>
     const startTime = Date.parse(`@(Model?.Active?.Start.ToString("yyyy-MM-ddTHH:mm:ss.fff"))`);
     const endTime = Date.parse(`@(Model?.Active?.End.ToString("yyyy-MM-ddTHH:mm:ss.fff"))`);
