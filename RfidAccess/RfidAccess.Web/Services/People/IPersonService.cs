@@ -5,7 +5,7 @@ namespace RfidAccess.Web.Services.People
 {
     public interface IPersonService
     {
-        Result CreatePerson(PersonCreateViewModel viewModel);
+        Task<Result> CreatePerson(PersonCreateViewModel viewModel);
 
         Task<Result<PersonCombinedViewModel>> GetAllPeople();
 

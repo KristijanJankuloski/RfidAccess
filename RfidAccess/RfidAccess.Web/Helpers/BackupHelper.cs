@@ -41,7 +41,6 @@ namespace RfidAccess.Web.Helpers
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                // On Linux, check typical mount points for USB drives
                 var drives = DriveInfo.GetDrives().Where(d => d.IsReady && d.RootDirectory.FullName.StartsWith("/media")).ToArray();
                 return drives;
             }

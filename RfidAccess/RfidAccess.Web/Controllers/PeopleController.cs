@@ -53,7 +53,7 @@ namespace RfidAccess.Web.Controllers
         {
             try
             {
-                var result = personService.CreatePerson(person);
+                var result = await personService.CreatePerson(person);
                 if (result.IsFailed)
                 {
                     TempData["Error"] = result.Message;

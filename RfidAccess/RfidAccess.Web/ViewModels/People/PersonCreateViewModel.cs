@@ -11,5 +11,8 @@ namespace RfidAccess.Web.ViewModels.People
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; } = string.Empty;
+
+        [MaxLength(100)]
+        public string? Code { get; set; }
     }
 }

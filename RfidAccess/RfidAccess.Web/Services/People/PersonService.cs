@@ -13,7 +13,7 @@ namespace RfidAccess.Web.Services.People
         private readonly PersonBufferService personBuffer = personBuffer;
         private readonly IPersonRepository personRepository = personRepository;
 
-        public Result CreatePerson(PersonCreateViewModel viewModel)
+        public async Task<Result> CreatePerson(PersonCreateViewModel viewModel)
         {
             Person person = new Person()
             {
@@ -21,6 +21,14 @@ namespace RfidAccess.Web.Services.People
                 LastName = viewModel.LastName.Trim(),
                 CreatedOn = DateTime.Now
             };
+
+            if (!string.IsNullOrWhiteSpace(viewModel.Code))
+            {
+                person.Code = viewModel.Code.Trim();
+                personRepository.Create(person);
+                await personRepository.SaveChanges();
+                return Result.Success;
+            }
 
             personBuffer.People.Add(person);
             return Result.Success;

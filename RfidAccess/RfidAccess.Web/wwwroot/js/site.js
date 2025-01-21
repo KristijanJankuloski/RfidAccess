@@ -1,9 +1,19 @@
 ﻿const connection = new signalR.HubConnectionBuilder().withUrl("/notifications").build();
 
-connection.on("Notification", (message) => {
+let notifications = [];
+function addNotification(message) {
     const wrapper = document.getElementById("notification-card-wrapper");
+    if (wrapper)
+        wrapper.innerHTML = "";
+
     const notification = JSON.parse(message);
-    const body = `
+
+    if (notifications.length > 5) {
+        notifications.pop();
+    }
+
+    notifications.unshift(notification);
+    let body = `
         <div class="card">
         <div class="card-header">
             <h5>Недозволен влез</h5>
@@ -17,21 +27,26 @@ connection.on("Notification", (message) => {
                         <th style="width: 15rem;">Време</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="table-danger">
-                        <td>${notification.Message}</td>
-                        <td>${notification.Code}</td>
-                        <td>${notification.Date}</td>
-                    </tr>
-                </tbody>
+                <tbody>         
+    `
+    notifications.forEach(n => {
+        body += `
+        <tr class="table-danger">
+            <td>${n.Message}</td>
+            <td>${n.Code}</td>
+            <td>${n.Date}</td>
+         </tr>`;
+    });
+    body += `</tbody>
             </table>
         </div>
-    </div>
-    `
+    </div>`;
+
     if (wrapper) {
         wrapper.innerHTML = body;
     }
-});
+}
+connection.on("Notification", (message) => addNotification(message));
 
 connection.on("Confirmation", (message) => {
     const notification = JSON.parse(message);
