@@ -19,11 +19,11 @@ function addNotification(message) {
             <h5>Недозволен влез</h5>
         </div>
         <div class="card-body">
-            <table class="table">
+            <table class="table" style="table-layout: fixed; width: 100%">
                 <thead>
                     <tr>
                         <th>Име</th>
-                        <th>Број на картичка</th>
+                        <th style="max-width: 50%">Број на картичка</th>
                         <th style="width: 15rem;">Време</th>
                     </tr>
                 </thead>
@@ -33,7 +33,7 @@ function addNotification(message) {
         body += `
         <tr class="table-danger">
             <td>${n.Message}</td>
-            <td>${n.Code}</td>
+            <td style="word-wrap: break-word; word-break: break-word; white-space: normal;">${n.Code}</td>
             <td>${n.Date}</td>
          </tr>`;
     });

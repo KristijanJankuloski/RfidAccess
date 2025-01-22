@@ -34,7 +34,7 @@
 </form>
 @if (Model.Buffer.Count > 0)
 {
-    <table class="table mb-3">
+    <table class="table mb-3" style="table-layout: fixed; width: 100%">
         <thead>
             <tr>
                 <th>Име</th>
@@ -65,7 +65,7 @@
             <tr>
                 <th>Име</th>
                 <th>Презиме</th>
-                <th>Број на картичка</th>
+                <th style="max-width: 50%">Број на картичка</th>
                 <th style="width:60px">VIP</th>
                 <th style="width:60px">Бришење</th>
             </tr>
@@ -76,7 +76,7 @@
                 <tr>
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
-                    <td><a class="btn btn-link" asp-area="" asp-controller="Records" asp-action="Index" asp-route-code="@person.Code">@person.Code</a></td>
+                    <td style="word-wrap: break-word; word-break: break-word; white-space: normal;"><a class="btn btn-link" asp-area="" asp-controller="Records" asp-action="Index" asp-route-code="@person.Code">@person.Code</a></td>
                     <td>
                         @if (person.IsWhitelisted)
                         {
